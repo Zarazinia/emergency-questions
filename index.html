@@ -8,6 +8,7 @@
 <p id="cat-fact">Click the button below to view a random emergency question!</p>
 <button id="show-fact">Show a new emergency question</button>
   
+  <script>
   var factPlaceholder = document.getElementById("cat-fact");
 var showFact = document.getElementById("show-fact");
 
@@ -29,6 +30,6 @@ showFact.addEventListener('click', function(){
   factNumber = Math.floor(Math.random()*5);
   factPlaceholder.textContent = randomFact();
 });
-
+</script>
 </body>
 </html>
