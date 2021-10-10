@@ -1,0 +1,12 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="main.css" rel="stylesheet" type="text/css" media="screen" />
+</head>
+<body>
+<h1>Emergency Questions!</h1>
+<p id="cat-fact">Click the button below to view a random emergency question!</p>
+<button id="show-fact">Show a new emergency question</button>
+
+</body>
+</html>
