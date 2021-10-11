@@ -4,7 +4,7 @@ var quotes = [
   '3',
   '4',
   '5',
-  '6',
+  '6'
 ]
 function newQuote() {
   var randomNumber = Math.floor(Math.random)) * (quotes.length)); 
