@@ -35,4 +35,7 @@ p {font-size:16px;}
 
 body {background:#ffffff;}
 
-blockquote {float: left;}
+blockquote {
+  float: left;
+  padding: 15px;
+  border: 1px solid red;}
