@@ -35,7 +35,7 @@ p {font-size:16px;}
 
 body {background:#ffffff;}
 
-.main blockquote {
+#quotes {
   font-size:25px;
   float: left;
   padding: 15px;
