@@ -15,8 +15,10 @@
   border: 1px solid red;
 }
 
-.menu.ul.li {
-  padding:5px;
+.menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
 .main {
