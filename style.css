@@ -40,3 +40,9 @@ body {background:#ffffff;}
   float: left;
   padding: 0px;
   border: 1px solid black;}
+
+button {
+  font-size:18px;
+  float: left;
+  padding: 0px;
+  border: 1px solid black;}
