@@ -1,6 +1,7 @@
 var quotes = [
  
     '\"What sport would be the funniest to add a mandatory amount of alcohol to?',
+    '\ What would be the hat to end all hats? What could you wear on your head that would make people stop what they are doing and stare in awe and amazement?',
     '\"What would be the coolest animal to scale up to the size of a horse?',
     '\"If you were wrongfully put into an insane asylum, how would you convince them that you’re actually sane and not just pretending to be sane?',
     '\"If you were arrested with no explanation, what would your friends and family assume you had done?'
