@@ -2,6 +2,7 @@
 * {
   box-sizing: border-box;
   margin: 0px;
+  font-family: verdana, Arial, sans-serif;
 }
 
 .header {
@@ -50,7 +51,7 @@
 h1{font-size:35px;}
 h2{font-size:30px;}
 h3{font-size:25px;}
-p {font-size:16px; font-face: verdana;}
+p {font-size:16px;}
 
 body {background: #ffffff;}
 
