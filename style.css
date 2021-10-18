@@ -71,7 +71,6 @@ body {background: #ffffff;}
   font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
-  float: left;
 }
 
-.button1 {border-radius: 6px; margin: 30px;}
+.button1 {border-radius: 6px; margin: 30px 0px; float: left;}
