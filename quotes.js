@@ -1,4 +1,10 @@
 var quotes = [
+ 
+    '\"If you were wrongfully put into an insane asylum, how would you convince them that you’re actually sane and not just pretending to be sane?',
+    '\"If you were arrested with no explanation, what would your friends and family assume you had done?'
+    
+    /*
+    
     '\"Life isn\'t about finding yourself, it is about creating yourself.\"\n\n-George Bernard Shaw',
     '\"If you are going down the right path and you are willing to keep walking, eventually you\'ll make progress.\"\n-Barrack Obama',
     '\"I have far more respect for the person with a single idea who gets there than one with a thousand ideas and does nothing.\"\n-Thomas Edison',
@@ -25,6 +31,8 @@ var quotes = [
     '\"Start by doing what\'s necessary; then do what\'s possible and suddenly you are doing the impossible.\"\n-Francis of Assisi',
     '\"It is our choices that show what we truly are, far more than our abilities.\"\n-Albus Dumbledore',
     '\"It does not do to dwell on dreams and forget to live.\"\n-Mirror of Erised'
+    
+    */
 ]
 
 function newQuote(){
