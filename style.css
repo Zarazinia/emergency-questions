@@ -17,6 +17,10 @@
   clear: both;
 }
 
+.info {
+ float: right; 
+}
+
 .menu {
   width: 25%;
   float: left;
