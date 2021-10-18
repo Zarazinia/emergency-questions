@@ -7,13 +7,13 @@
 .header {
   border: 1px solid red;
   padding: 15px;
-  background: #cccccc;
+  background: #99bbff;
 }
 
 .footer {
   border: 1px solid red;
   padding: 15px;
-  background: #cccccc;
+  background: #99bbff;
   clear: both;
   margin-top: auto;
   position: fixed;
@@ -61,7 +61,7 @@ body {background: #ffffff;}
 }
 
 .button {
-  background-color: #4CAF50; /* Green */
+  background-color: #004de6; 
   border: none;
   color: white;
   padding: 10px;
