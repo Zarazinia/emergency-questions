@@ -2,6 +2,7 @@
 * {
   box-sizing: border-box;
   margin: 0;
+}
 
 .header {
   border: 1px solid red;
