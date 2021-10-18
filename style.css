@@ -40,7 +40,23 @@
   padding: 0;
 }
 
-.main {
+.main top {
+  width: 75%;
+  float: left;
+  padding: 15px;
+  border: 1px solid red;
+  background: #ffffff;
+}
+
+.main middle {
+  width: 75%;
+  float: left;
+  padding: 15px;
+  border: 1px solid red;
+  background: #ffffff;
+}
+
+.main bottom {
   width: 75%;
   float: left;
   padding: 15px;
