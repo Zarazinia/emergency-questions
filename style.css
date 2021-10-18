@@ -57,14 +57,14 @@ body {background: #ffffff;}
 #quotes {
   font-size:18px;
   float: left;
-  padding: 0px;
+  padding: 0px 0px 50px 0px;
 }
 
 .button {
   background-color: #004de6; 
-  border: 1px solid black;
+  border: 0px;
   color: white;
-  padding: 30px;
+  padding: 0px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
