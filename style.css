@@ -10,6 +10,12 @@
   background: #cccccc;
 }
 
+.footer {
+  border: 1px solid red;
+  padding: 15px;
+  background: #cccccc;
+}
+
 .menu {
   width: 25%;
   float: left;
