@@ -74,3 +74,8 @@ body {background: #ffffff;}
 }
 
 .button1 {border-radius: 6px; clear: left; float: left;}
+
+#logo {
+  float: right;
+  border="1px";
+}
