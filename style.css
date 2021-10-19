@@ -6,7 +6,7 @@
 }
 
 .header {
-  border: 1px solid red;
+  border-bottom: 1px solid black;
   padding: 15px;
   background: #99bbff;
 }
@@ -48,7 +48,7 @@
   background: #ffffff;
 }
 
-h1{font-size:35px;}
+h1{font-size:35px; border: 1px solid red;}
 h2{font-size:30px;}
 h3{font-size:25px;}
 p {font-size:16px;}
