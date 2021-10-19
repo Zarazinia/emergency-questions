@@ -48,7 +48,7 @@
   background: #ffffff;
 }
 
-h1{font-size:35px; border: 1px solid red; display: inline;}
+h1{font-size:35px; border: 1px solid red; display: inline; float: left;}
 h2{font-size:30px;}
 h3{font-size:25px;}
 p {font-size:16px;}
