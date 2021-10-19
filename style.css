@@ -18,10 +18,11 @@
   background: #99bbff;
   clear: both;
   margin-top: auto;
-  position: auto;
   left: 0;
   bottom: 0;
   width: 100%;
+  height: 100px;
+  position: absolute;
 }
 
 .info {
