@@ -77,5 +77,6 @@ body {background: #ffffff;}
 
 #logo {
   float: right;
-  border="1px";
+  border: 1px;
+  align: right;
 }
