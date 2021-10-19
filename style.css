@@ -86,14 +86,14 @@ ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  width: auto;
+  width: 25%;
   background-color: #f1f1f1;
 }
 
 li a {
   display: block;
   color: #000;
-  padding: 8px 16px;
+  padding: 0px;
   text-decoration: none;
 }
 
