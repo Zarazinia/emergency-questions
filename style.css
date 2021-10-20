@@ -1,5 +1,7 @@
 * {
   box-sizing: border-box;
+  margin: 0px;
+  font-family: verdana, Arial, sans-serif;
 }
 
 body {
