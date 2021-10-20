@@ -34,6 +34,7 @@ body {
    -webkit-flex: 1;
    -ms-flex: 1;
    flex: 1;
+  min-height: 300px;
 }
 
 /* Middle column */
@@ -41,6 +42,7 @@ body {
   -webkit-flex: 2;
   -ms-flex: 2;
   flex: 2;
+  min-height: 300px;
 }
 
 /* Style the footer */
