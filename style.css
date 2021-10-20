@@ -1,18 +1,35 @@
+
+  
+
 * {
   box-sizing: border-box;
   margin: 0px;
   font-family: verdana, Arial, sans-serif;
 }
 
-
-
-header {  
+.header {
   border-bottom: 1px solid black;
   padding: 15px;
   background: #99bbff;
-  height: 180px;}
+  height: 180px;
+}
 
-body {min-height: 100%; display: flex;}
+.footer {
+  border: 1px solid red;
+  padding: 15px;
+  background: #99bbff;
+  clear: both;
+  margin-top: auto;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100px;
+  position: absolute;
+}
+
+.info {
+ float: right; 
+}
 
 .menu {
   width: 25%;
@@ -27,21 +44,65 @@ body {min-height: 100%; display: flex;}
   padding: 0;
 }
 
-main {
-  float: right; height: auto;
-    width: 75%;
-  float: right;
+.main {
+  width: 75%;
+  float: left;
   padding: 15px;
   border: 1px solid red;
+  background: #ffffff;
 }
-
-footer {margin-top: auto; background-color: #cccccc;}
 
 h1{font-size:35px; border: 1px solid red; display: inline; float: left;}
 h2{font-size:30px;}
 h3{font-size:25px;}
 p {font-size:16px;}
 
-.info {
- float: right; 
+body {background: #ffffff; min-height: 100%; display: flex;}
+
+#quotes {
+  font-size:18px;
+  float: left;
+  padding: 0px;
+  margin: 30px 0px;
+}
+
+.button {
+  background-color: #004de6; 
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.button1 {border-radius: 6px; clear: left; float: left;}
+
+#logo {
+  float: right;
+  border: 1px;
+  align: right;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background-color: #f1f1f1;
+  border: 1px solid black;
+}
+
+li a {
+  display: block;
+  color: #000;
+  padding: 0px;
+  text-decoration: none;
+}
+
+/* Change the link color on hover */
+li a:hover {
+  background-color: #555;
+  color: white;
 }
