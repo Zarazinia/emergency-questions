@@ -42,7 +42,6 @@ body {
   -webkit-flex: 2;
   -ms-flex: 2;
   flex: 2;
-  min-height: 100px;
 }
 
 /* Style the footer */
