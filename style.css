@@ -1,4 +1,8 @@
-html {height: 100%;}
+* {
+  box-sizing: border-box;
+}
+
+
 
 header {background-color: #cccccc; height: 180px; border: 1px solid red; margin: 0px;}
 
