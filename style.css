@@ -1,5 +1,7 @@
 * {
   box-sizing: border-box;
+  margin: 0px;
+  font-family: verdana, Arial, sans-serif;
 }
 
 
@@ -16,3 +18,7 @@ h1{font-size:35px; border: 1px solid red; display: inline; float: left;}
 h2{font-size:30px;}
 h3{font-size:25px;}
 p {font-size:16px;}
+
+.info {
+ float: right; 
+}
