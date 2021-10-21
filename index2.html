@@ -7,98 +7,28 @@
        </head>
   
   <style>
-    
+.accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  transition: 0.4s;
+}
 
-nav {
-	position: fixed;
-	display: flex;
-	align-items: flex-start;
-	width: 20%;
-	height: 100%;
-	background-color: #111;
+.active, .accordion:hover {
+  background-color: #ccc; 
 }
-main {
-	position: fixed;
-	right: 0;
-	width: 80%;
-	height: 100%;
-	background-color: #fff;
-	overflow: auto;
-	padding: 40px;
-}
-h1 {
-	font-weight: bold;
-	margin-bottom: 50px;
-	font-size: 55px;
-	text-align: center;
-}
-p {
-	margin-bottom: 20px;
-	line-height: 26px;
-}
-p::first-letter {
-	font-size: 200%;
-	font-weight: bold;
-}
-li, ul label.title, ul, a {
-	width: 100%;
-	color: #FFF;
-	font-family: 'Montserrat', 'Open Sans', sans-serif;
-	display: block;
-	font-weight: bold;
-}
-ul label {
-	height: 35px;
-}
-ul li{
-	height: 35px;
-	overflow: hidden;
-	transition: all .3s;
-}
-li {
-	display: block;
-	background-color: #363636;
-}
-label.title {
-	font-size: 14px;
-	background: linear-gradient(#111, #2f2f2f);
-	padding: 10px 15px;
-	cursor: pointer;
-  transition: all .25s;
-}
-a{
-	font-size: 12px;
-	text-decoration: none;
-	color: #FFF;
-	display: block;
-	padding: 10px 25px;
-	transition: all .25s;
-}
-a:hover {
-	background-color: #444;
-  box-shadow: inset 5px 0px 0px 0px #fff;
-}
-label:hover {
-	text-shadow: 0px 0px 10px #fff;
-}
-input[type="radio"] {
-	display: none;
-}
-#edit:checked + li, #archive:checked + li, #tools:checked + li, #preferences:checked + li {
-	height: 179px;
-}
-i {
-	margin-right: 12px;
-}
-@media screen and (max-width: 600px){
-	nav {
-		width: 100%;
-		position: relative;
-	}
-	main {
-		width: 100%;
-		position: relative;
-	}
+
+.panel {
+  padding: 0 18px;
+  display: none;
+  background-color: white;
+  overflow: hidden;
 }
   </style>
   
@@ -119,41 +49,42 @@ i {
     
 	
 <nav class="menu">
-			<ul>
-				<input type="radio" name="menu" id="archive" checked>
-				<li>
-					<label for="archive" class="title"><i class="fa fa-folder"></i>Archive</label>
-					<a href="#">New File</a>
-					<a href="#">Open File</a>
-					<a href="#">Save As...</a>
-					<a href="#">Exit</a>
-				</li>
-				<input type="radio" name="menu" id="edit">
-				<li>
-					<label for="edit" class="title"><i class="fa fa-edit"></i>Edit</label>
-					<a href="#">Copy</a>
-					<a href="#">Cut</a>
-					<a href="#">Paste</a>
-					<a href="#">Undo</a>
-				</li>
-				<input type="radio" name="menu" id="tools">
-				<li>
-					<label for="tools" class="title"><i class="fa fa-gavel"></i>Tools</label>
-					<a href="#">Build</a>
-					<a href="#">Macros</a>
-					<a href="#">Command</a>
-					<a href="#">Snippets</a>
-				</li>
-				<input type="radio" name="menu" id="preferences">
-				<li>
-					<label for="preferences" class="title"><i class="fa fa-gears"></i>Preferences</label>
-					<a href="#">Browser</a>
-					<a href="#">Settings</a>
-					<a href="#">Packages</a>
-					<a href="#">Theme</a>
-				</li>
-			</ul>
-		</nav>
+			
+	
+	<button class="accordion">Section 1</button>
+<div class="panel">
+  <p><a href="#">sub 2</a></p>
+  <p><a href="#">sub 3</a></p>
+  <p><a href="#">sub 4</a></p>
+</div>
+
+<button class="accordion">Section 2</button>
+<div class="panel">
+<p><a href="#">sub 5</a></p></div>
+
+<button class="accordion">Section 3</button>
+<div class="panel">
+ <p><a href="#">sub 7</a></p></div>
+
+<script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+  });
+}
+</script>
+
+	
+	
   
   </div>
   <div class="column middle" style="background-color:#fff;"><i id = "quotes">What?</i></div>
