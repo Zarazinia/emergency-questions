@@ -5,6 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="style.css">
        </head>
+  
+ 
+  
     <body onload="newQuote()">
   
 <!--HEADER-->
@@ -18,14 +21,58 @@
 <!--MAIN-->
 
 <div class="row">
-  <div class="column side" style="background-color:#aaa;"><ul>
-      <li><a href="index.html">Emergency questions</a></li>
-      <li><a href="#">Getting to know you</a></li>
-      <li><a href="#">Would you rather</a></li>
-      <li><a href="#">Nav 4</a></li>
-  </ul></div>
-  <div class="column middle" style="background-color:#fff;"><i id = "quotes">What?</i></div>
-  <div class="column side" style="background-color:#fff;"><button class="button button1" onclick="newQuote()">Next question</button></div>
+  <div class="column side" style="background-color:#aaa;">
+    
+	
+<nav class="menu">
+			
+	
+<button class="accordion"><strong>Questions</strong></button>
+<div class="panel">
+   <ul><li><a href="#">Dating</a></li>
+   <li><a href="#">Conversation</a></li>
+   <li><a href="#">Would you rather</a></li></ul>
+</div>
+
+<button class="accordion"><a href="#"><strong>Section 2</strong></a></button>
+
+
+<button class="accordion"><a href="#"><strong>Section 3</strong></a></button>
+
+
+<script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    } 
+  });
+}
+</script>
+
+	
+	
+  
+  </div>
+  <div class="column middle" style="background-color:#fff;">
+	  <h1>Header</h1>
+	  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim 
+             veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate 
+	     velit esse cillum dolore eu fugiat nulla pariatur.</p>
+	  <p>&nbsp;</p>
+	  
+	  
+	  <i id = "quotes">What?</i></div>
+	  <div class="column side" style="background-color:#fff;"><button class="button button1" onclick="newQuote()">Next question</button></div>
+	  
+ 
 </div>
 
 <!--MAIN END-->
