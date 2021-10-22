@@ -132,6 +132,7 @@ p {font-size:16px;}
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.2s ease-out;
+  margin-left: 20px;
 }
 
 a:link {
