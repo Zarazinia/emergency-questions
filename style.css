@@ -132,3 +132,15 @@ p {font-size:16px;}
   overflow: hidden;
   transition: max-height 0.2s ease-out;
 }
+
+a:link {
+  text-decoration: none;
+}
+
+a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
