@@ -96,7 +96,7 @@ li a:hover {
 
 #quotes {margin: 10px; padding-bottom: 20px; border: 1px red solid; float: left;}
 
-#qbox {border: 1px red solid; border-radius: 16px; background-color: #aaa;}
+#qbox {padding: 15px 32px; border-radius: 16px; background-color: #aaa;}
 
 h1{font-size:35px; padding:10px;}
 h2{font-size:30px;}
