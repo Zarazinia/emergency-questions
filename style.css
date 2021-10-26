@@ -94,7 +94,9 @@ li a:hover {
 
 .button1 {border-radius: 6px; clear: left; float: left;}
 
-#quotes {margin: 10px; border: 1px red solid;}
+#quotes {margin: 10px; padding-bottom: 20px; border: 1px red solid;}
+
+#qbox {border-radius: 16px; background-color: #aaa;}
 
 h1{font-size:35px; padding:10px;}
 h2{font-size:30px;}
