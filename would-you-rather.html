@@ -5,15 +5,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="style.css">
        </head>
-  
- 
-  
-    <body onload="newQuote()">
+   <body onload="newQuote()">
   
 <!--HEADER-->
 <div class="header">
- 
-	<span id="logo"><a href="index.html"><img src="Luv2meetU-logo-300x286.png" width="175px" ></a></span>
+ <span id="logo"><a href="index.html"><img src="Luv2meetU-logo-300x286.png" width="175px" ></a></span>
 </div>
 <!--HEADER END-->
         
@@ -21,25 +17,19 @@
 <!--MAIN-->
 
 <div class="row">
-  <div class="column side" style="background-color:#aaa;">
-   
-	
-	
+	<div class="column side" style="background-color:#aaa;">
+   	
+<!-- MENU -->
+	  
 <nav class="menu">
-			
-	
 <button class="accordion"><strong>Questions</strong></button>
-<div class="panel">
+	<div class="panel">
    <ul><li><a href="#">Dating</a></li>
    <li><a href="#">Conversation</a></li>
    <li><a href="would-you-rather.html">Would you rather</a></li></ul>
-</div>
-
+	</div>
 <button class="accordion"><a href="#"><strong>Section 2</strong></a></button>
-
-
 <button class="accordion"><a href="#"><strong>Section 3</strong></a></button>
-
 
 <script>
 var acc = document.getElementsByClassName("accordion");
@@ -58,29 +48,23 @@ for (i = 0; i < acc.length; i++) {
 }
 </script>
 
+	</div>
+<!--MENU END-->	
 	
+	<div class="column middle" style="background-color:#fff;">
+<h1>Would you rather</h1>
+<i id = "quotes">What?</i> 
+<button class="button button1" onclick="newQuote()">Next question</button> 
+	</div>
 	
-  
-  </div>
-  <div class="column middle" style="background-color:#fff;">
-	  <h1>Would you rather</h1>
-
-	  
-	  
-	  
-	  <div id="qbox">  <i id = "quotes">What?</i> 
-	  
-	   <button class="button button1" onclick="newQuote()">Next question</button> </div>
-	  
-	  </div>
-	  <div class="column side" style="background-color:#fff;">
-	  
-		  
-		  <p>
-	These types of questions are great for critical thinking skills because it makes you analyize two very engaging or not so engaging situations. 
-	They also promote practicing their listening and speaking skills while creating situations that they have to think on their feet.
+<!-- RIGHT SIDEBAR-->
+	<div class="column side" style="background-color:#fff;">
+<p>
+These types of questions are great for critical thinking skills because it makes you analyize two very engaging or not so engaging situations. 
+They also promote practicing their listening and speaking skills while creating situations that they have to think on their feet.
 </p>
-	  </div>
+	</div>
+
 	  
  
 </div>
