@@ -1,5 +1,16 @@
 var quotes = [
  
+    'Would you rather have a flying carpet or a car that can drive underwater?',
+    'Would you rather be an amazing painter or a brilliant mathematician?',
+    'Would you rather have a completely automated home or a self-driving car?',
+    'Would you rather never be able to eat meat or never be able to eat vegetables?',
+    'Would you rather live in a cave or live in a tree house?',
+    'Would you rather there be a perpetual water balloon war going on in your city/town or a perpetual food fight?',
+    'Would you rather be a successful artist or a successful business owner?',
+    'Would you rather be born again in the same country or a different one of your choosing?',
+    'Would you rather be forced to dance every time you heard music or be forced to sing along to any song you heard?',
+    'Would you rather be covered in fur or covered in scales?',
+    'Would you rather always be 10 minutes late or always be 20 minutes early?',
     'Would you rather your only mode of transportation be a donkey or a giraffe?',
     'Would rather have 100 duck-sized elephants or 1 elephant-sized duck?',
     'Would you rather speak to animals or know other people’s thoughts?',
