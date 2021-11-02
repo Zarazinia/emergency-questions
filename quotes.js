@@ -25,9 +25,10 @@ var quotes = [
     'Would you rather drink black tea or have coffee everyday?',
     'Would you rather have your own robot or a jetpack?',
     'Would you rather have the ability to fly or be invisible?',
-    'Would you rather eat pizza or ice cream as your own meal for the rest of your life?',
-    'Would you rather have a rewind button or a pause button on your life?'
-    
+    'Would you rather eat pizza or ice cream as your only meal for the rest of your life?',
+    'Would you rather have a rewind button or a pause button on your life?',
+    'Would you rather be transported 500 years into the future or 500 years into the past?',
+    'Would you rather be constantly tired no matter how much you sleep or constantly hungry no matter how much you eat?'
 
 ]
 
