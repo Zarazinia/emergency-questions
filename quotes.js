@@ -1,5 +1,9 @@
 var quotes = [
  
+    'Would you rather find your true love or a suitcase with five million dollars inside?',
+    'Would you rather type faster or dance better?',
+    'Would you rather have free Wi-Fi wherever you go or be able to drink unlimited free coffee at any coffee shop?',
+    'Would you rather live on the beach or in a cabin in the woods?',
     'Would you rather have a flying carpet or a car that can drive underwater?',
     'Would you rather be an amazing painter or a brilliant mathematician?',
     'Would you rather have a completely automated home or a self-driving car?',
