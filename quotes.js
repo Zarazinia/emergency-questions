@@ -1,7 +1,7 @@
 var quotes = [
  
     'Some text here about the image. <br /><img src="Luv2meetU-logo-300x286.png" alt="Luv 2 meet U logo"><br />Some more text here.',
-    'Would you rather find your true love or a suitcase with five million dollars inside?',
+  /*  'Would you rather find your true love or a suitcase with five million dollars inside?',
     'Would you rather type faster or dance better?',
     'Would you rather have free Wi-Fi wherever you go or be able to drink unlimited free coffee at any coffee shop?',
     'Would you rather live on the beach or in a cabin in the woods?',
@@ -28,7 +28,7 @@ var quotes = [
     'Would you rather have the ability to fly or be invisible?',
     'Would you rather eat pizza or ice cream as your only meal for the rest of your life?',
     'Would you rather have a rewind button or a pause button on your life?',
-    'Would you rather be transported 500 years into the future or 500 years into the past?',
+    'Would you rather be transported 500 years into the future or 500 years into the past?', */
     'Would you rather be constantly tired no matter how much you sleep or constantly hungry no matter how much you eat?'
 
 ]
