@@ -1,6 +1,6 @@
 var quotes = [
  
-    'Some text here about the image. <br /><img src="Luv2meetU-logo-300x286.png" alt="Luv 2 meet U logo"><br />Some more text here.',
+    '<p>Some text here about the image. <br /><img src="Luv2meetU-logo-300x286.png" alt="Luv 2 meet U logo"><br />Some more text here.</p>',
   /*  'Would you rather find your true love or a suitcase with five million dollars inside?',
     'Would you rather type faster or dance better?',
     'Would you rather have free Wi-Fi wherever you go or be able to drink unlimited free coffee at any coffee shop?',
