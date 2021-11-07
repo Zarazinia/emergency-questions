@@ -8,7 +8,6 @@
   
  
   
-    <body onload="newQuote()">
   
 <!--HEADER-->
 <div class="header">
@@ -21,7 +20,7 @@
 <!--MAIN-->
 
 <div class="row">
-  <div class="column side" style="background-color:#aaa;">
+  <div class="col-3 col-s-3 menu">
     
 	
 <nav class="menu">
@@ -39,29 +38,9 @@
 
 <button class="accordion"><a href="useful.html"><strong>Useful numbers</strong></a></button>
 
-
-<script>
-var acc = document.getElementsByClassName("accordion");
-var i;
-
-for (i = 0; i < acc.length; i++) {
-  acc[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var panel = this.nextElementSibling;
-    if (panel.style.maxHeight) {
-      panel.style.maxHeight = null;
-    } else {
-      panel.style.maxHeight = panel.scrollHeight + "px";
-    } 
-  });
-}
-</script>
-
-	
-	
-  
-  </div>
-  <div class="column middle" style="background-color:#fff;">
+	</div>
+	  
+  <div class="col-6 col-s-9">
 	  <h1>Top tips</h1>
 	  <p>Some text here about what the website is for, and how to use it.</p>
 	  
@@ -83,6 +62,6 @@ for (i = 0; i < acc.length; i++) {
 </div>
 <!--FOOTER END-->
          
-        <script src="quotes.js"></script>
+    
     </body>
 </html>
