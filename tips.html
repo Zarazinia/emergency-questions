@@ -9,59 +9,74 @@
  
   
   
+<body>
+
 <!--HEADER-->
 <div class="header">
- 
-	<span id="logo"><a href="index.html"><img src="Luv2meetU-logo-300x286.png" width="175px" ></a></span>
+ <span id="logo"><a href="index.html"><img src="Luv2meetU-logo-300x286.png" width="175px" ></a></span>
 </div>
 <!--HEADER END-->
-        
-        
-<!--MAIN-->
 
 <div class="row">
-  <div class="col-3 col-s-3 menu"  style="background-color:#aaa;">
-    
-	
-<nav class="menu">
-			
-	
+  <div class="col-3 col-s-3 menu">
+
+
+
+
 <button class="accordion"><strong>Questions</strong></button>
-<div class="panel">
+	<div class="panel">
    <ul><li><a href="#">Dating</a></li>
    <li><a href="#">Conversation</a></li>
    <li><a href="would-you-rather.html">Would you rather</a></li></ul>
-</div>
-
+	</div>
 <button class="accordion"><a href="tips.html"><strong>Top tips</strong></a></button>
-
-
 <button class="accordion"><a href="useful.html"><strong>Useful numbers</strong></a></button>
 
-	</div>
-	  
-  <div class="col-6 col-s-9">
-	  <h1>Top tips</h1>
-	  <p>Some text here about what the website is for, and how to use it.</p>
-	  
-	  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim 
-             veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate 
-	     velit esse cillum dolore eu fugiat nulla pariatur.</p>
-	  <p>&nbsp;</p>
-	  
+<script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    } 
+  });
+}
+</script>
+
 	
-	  
-	  </div>
+
+
+
+
+  </div>
+
+
+
+<div class="col-6 col-s-9">
+<h1>Top tips</h1>
+
+    
+    
+<p>These types of questions are great for critical thinking skills because it makes you analyize two very engaging or not so engaging situations. 
+They also promote practicing their listening and speaking skills while creating situations that they have to think on their feet.</p>
+  </div>
+
+  
 </div>
 
-<!--MAIN END-->
-        
 <!--FOOTER-->
 <div class="footer">
   <p>&copy;7HD 2021</p>
 </div>
 <!--FOOTER END-->
          
-    
-    </body>
+        <script src="quotes.js"></script>
+
+</body>
 </html>
