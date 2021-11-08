@@ -19,7 +19,7 @@
   padding: 10px;
   text-align: right;
   height: 100px;
-text-color: #fff;}
+  color: #fff;}
 
 .Header { grid-area: Header;   background-color: #f1f1f1;
   padding: 30px;
