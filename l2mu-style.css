@@ -3,79 +3,70 @@
   margin: 0px;
   font-family: verdana, Arial, sans-serif;
 }
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: #fff;
-  min-height: 100vh;
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 0.7fr 1.9fr 0.4fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "Header Header Header"
+    "Nav Main Main"
+    "Footer Footer Footer";
 }
 
-.row::after {
-  content: "";
-  clear: both;
-  display: table;
-}
-
-[class*="col-"] {
-  float: left;
-  padding: 15px;
-}
-
-
-/* Style the header */
-.header {
-  background-color: #f1f1f1;
-  padding: 30px;
-  text-align: center;
-  font-size: 35px;
-}
-
-
-
-
-
-/* Style the footer */
-.footer {
-  background-color: #f1f1f1;
+.Footer { grid-area: Footer;   background-color: #f1f1f1;
   padding: 10px;
   text-align: center;
-  height: 100px;
+  height: 100px;}
+
+.Header { grid-area: Header;   background-color: #f1f1f1;
+  padding: 30px;
+  text-align: center;
+  font-size: 35px;}
+
+.Nav { grid-area: Nav;   background-color: #aaa;
+  padding: 0px;
+  text-align: center;
+  font-size: 12px;}
+
+.Main { grid-area: Main; }
+
+h1{font-size:25px; padding:10px;}
+h2{font-size:20px;}
+h3{font-size:15px;}
+h7{font-size:12px; padding:10px;}
+p {font-size:14px; padding:10px;}
+
+.logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  background-color: #aaa;
 }
 
-/* For mobile phones: */
-[class*="col-"] {
-  width: 100%;
+li a {
+  display: block;
+  color: #000;
+  padding: 8px 16px;
+  text-decoration: none;
+  text-align: left;
 }
 
-@media only screen and (min-width: 600px) {
-  /* For tablets: */
-  .col-s-1 {width: 8.33%;}
-  .col-s-2 {width: 16.66%;}
-  .col-s-3 {width: 25%;}
-  .col-s-4 {width: 33.33%;}
-  .col-s-5 {width: 41.66%;}
-  .col-s-6 {width: 50%;}
-  .col-s-7 {width: 58.33%;}
-  .col-s-8 {width: 66.66%;}
-  .col-s-9 {width: 75%;}
-  .col-s-10 {width: 83.33%;}
-  .col-s-11 {width: 91.66%;}
-  .col-s-12 {width: 100%;}
+/* Change the link color on hover */
+li a:hover {
+  background-color: #555;
+  color: white;
 }
-@media only screen and (min-width: 768px) {
-  /* For desktop: */
-  .col-1 {width: 8.33%;}
-  .col-2 {width: 16.66%;}
-  .col-3 {width: 25%;}
-  .col-4 {width: 33.33%;}
-  .col-5 {width: 41.66%;}
-  .col-6 {width: 50%;}
-  .col-7 {width: 58.33%;}
-  .col-8 {width: 66.66%;}
-  .col-9 {width: 75%;}
-  .col-10 {width: 83.33%;}
-  .col-11 {width: 91.66%;}
-  .col-12 {width: 100%;}
-}
+
+/*Button*/
 .button {
   background-color: #004de6; 
   border: none;
@@ -83,23 +74,19 @@ body {
   padding: 15px 32px;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
+  display: block;
   font-size: 16px;
-  margin: 10px;
+  margin: 0px;
 }
 
-.button1 {border-radius: 6px; clear: left; float: left;}
+.button1 {border-radius: 6px; display: block;}
+	
+/*Button END*/
 
-#quotes {margin: 10px; padding-bottom: 20px; float: left;}
-
-#qbox {padding: 15px 32px; border-radius: 16px; background-color: #aaa;}
-
-h1{font-size:35px; padding:10px;}
-h2{font-size:30px;}
-h3{font-size:25px;}
-h7{font-size:12px; padding:10px;}
-p {font-size:14px; padding:10px;}
-
+#quotes {margin: 0px; padding-bottom: 20px; display: block;}
+	
+	
+/*Accordian*/
 .accordion {
   background-color: #aaa;
   color: #000;
@@ -130,14 +117,13 @@ p {font-size:14px; padding:10px;}
 }
 
 .panel {
-  padding: 0 8px;
+  padding: 0 ;
   background-color: #aaa;
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.2s ease-out;
-  margin-left: 20px;
+  margin-left: 0px;
 }
-
 a:link {
   text-decoration: none;
   color: black;
@@ -152,3 +138,5 @@ a:hover {
   text-decoration: none;
   color: black;
 }
+	
+/*Accordian END*/
