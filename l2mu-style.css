@@ -18,7 +18,8 @@
 .Footer { grid-area: Footer;   background-color: #542785;
   padding: 10px;
   text-align: center;
-  height: 100px;}
+  height: 100px;
+text-color: #fff;}
 
 .Header { grid-area: Header;   background-color: #f1f1f1;
   padding: 30px;
