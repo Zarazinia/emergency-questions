@@ -108,7 +108,7 @@ li a:hover {
 .accordion:after {
   content: '\002B';
   color: #000;
-  font-weight: bold;
+ /* font-weight: bold;*/
   float: right;
   margin-left: 5px;
 }
