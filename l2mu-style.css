@@ -67,6 +67,11 @@ li a:hover {
   color: white;
 }
 
+.imgleft { display: inline;
+	padding: 5px;
+	float: left;
+}
+
 /*Button*/
 .button {
   background-color: #542785; 
