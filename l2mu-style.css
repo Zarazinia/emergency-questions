@@ -70,7 +70,7 @@ li a:hover {
 .imgleft { display: inline;
 	padding: 5px;
 	float: left;
-	border: 1px dotted red;
+	border: 1px solid red;
 }
 
 /*Button*/
