@@ -94,7 +94,7 @@ li a:hover {
 /*Button END*/
 
 #quotes {margin: 0px; padding-bottom: 20px; display: block;}
-#inspire {margin: 0px; padding-bottom: 20px; display: block; text-align: center; font-size: 24px; font-weight: bold;}
+#inspire {padding-bottom: 20px;text-align: center; font-size: 24px; font-weight: bold;}
 	
 	
 /*Accordian*/
