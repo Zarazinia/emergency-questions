@@ -70,7 +70,10 @@ li a:hover {
 .imgleft { display: inline;
 	padding: 5px;
 	float: left;
-	border: 1px solid red;
+}
+.imgright { display: inline;
+	padding: 5px;
+	float: right;
 }
 
 /*Button*/
