@@ -2,7 +2,7 @@ var inspire = [
  
 
     'Be happy!',
-    'Don\'t panic', 
+    'Don\'t panic!', 
     'Smile!'
 
 ]
