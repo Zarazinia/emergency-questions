@@ -1,6 +1,6 @@
 var quotes = [
  
-    'If you could jump into a pool of something, what would it be?'.
+    'If you could jump into a pool of something, what would it be?',
     'If you could be part Grufallo, would you have claws, fangs, horns, or spikes?',
     'What\'s the worst present you\'ve ever recieved?',
     'What fictional character have you had a crush on (other than Mr Darcy)?',
@@ -9,7 +9,7 @@ var quotes = [
     'Where\'s the worst place you\'ve ever been?', 
     'What New Years resolutions will you fail to keep next year?',
     'What would your so-called best friend say was your biggest flaw?',
-    'How would you describe yourself to an impressionable stranger?'
+    'How would you describe yourself to an impressionable stranger?',
     'If you were given one extra hour a day, how much more alcohol would you drink?',
     'What\'s your favourite smell?',
     'What\'s your worst fashion decision?',
