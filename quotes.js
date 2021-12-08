@@ -4,7 +4,7 @@ var quotes = [
     'What does Father Christmas need to do to modernize?',
     'What would you like your pet sound like if it could talk?',
     'What\'s the most annoying place you\'ve ever been to?',
-    'What would be the funniest thing to fill a pin&ntilde;ta?',
+    'What would be the funniest thing to fill a pin&ntilde;ta with?',
     'If you could jump into a pool of something, what would it be?',
     'If you could be part Grufallo, would you have claws, fangs, horns, or spikes?',
     'What\'s the worst present you\'ve ever recieved?',
