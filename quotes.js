@@ -1,6 +1,16 @@
 var quotes = [
  
     'If you could have a fifth season, what would it be, and when would you have it?',
+    'What would your wrestling name be?',
+    'What\'s your favourite long red thing?',
+    'What film of story would you like to see remade by the muppets?',
+    'Can money buy you happiness?',
+    'If you could only eat one thing for the rest of your life what would it be?',
+    'Which country would you like to be the ruler of?',
+    'Would you rather have wooden teeth, or a wooden leg?',
+    'What do you think the tooth fairy is doing with all those teeth?',
+    'What\'s your favourite round thing?',
+    'How do you decide when it\'s time to retire a pair of pants?',
     'What does Father Christmas need to do to modernize?',
     'What would you like your pet sound like if it could talk?',
     'What\'s the most annoying place you\'ve ever been to?',
