@@ -3,7 +3,7 @@ var quotes = [
     'If you could jump into a pool of something, what would it be?',
     'If you could be part Grufallo, would you have claws, fangs, horns, or spikes?',
     'What\'s the worst present you\'ve ever recieved?',
-    'What fictional character have you had a crush on (other than Mr Darcy)?',
+    'What fictional character have you had a crush on, other than Mr Darcy?',
     'What\'s your favourite flat thing?',
     'If you could hypnotise someone, who would it be, and what would you make them do?',
     'Where\'s the worst place you\'ve ever been?', 
