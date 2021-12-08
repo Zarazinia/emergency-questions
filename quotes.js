@@ -1,5 +1,10 @@
 var quotes = [
  
+    'If you could have a fifth season, what would it be, and when would you have it?',
+    'What does Father Christmas need to do to modernize?',
+    'What would you like your pet sound like if it could talk?',
+    'What\'s the most annoying place you\'ve ever been to?',
+    'What would be the funniest thing to fill a pin&ntilde;ta?',
     'If you could jump into a pool of something, what would it be?',
     'If you could be part Grufallo, would you have claws, fangs, horns, or spikes?',
     'What\'s the worst present you\'ve ever recieved?',
