@@ -1,5 +1,15 @@
 var quotes = [
  
+    'What bin do you need to put out this week?',
+    'If you had the planet to yourself, where would you live?',
+    'Which is best, Christmas in Summer, or Christmas in Winter?',
+    'Which celebrity will play you in the film about your life?',
+    'Do you have any feelings about how cutlery should be placed in the dishwasher?',
+    'What song would you like to replace our national anthem with?',
+    'Have you ever fallen out of a hammock or the top bed of a bunkbed?',
+    'What is your favourite anagram?',
+    'Have you ever pretended to be your own twin?',
+    'What one photo would you send out to aliens?',
     'If you could have a fifth season, what would it be, and when would you have it?',
     'What would your wrestling name be?',
     'What\'s your favourite long red thing?',
