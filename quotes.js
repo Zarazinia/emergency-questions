@@ -14,6 +14,8 @@ var quotes = [
     'What song would you like to replace our national anthem with?',
     'Have you ever fallen out of a hammock or the top bed of a bunkbed?',
     'What is your favourite anagram?',
+    'Have you ever had anything removed from your body?',
+    'How do you feel about marmite?',
     'Have you ever pretended to be your own twin?',
     'What one photo would you send out to aliens?',
     'If you could have a fifth season, what would it be, and when would you have it?',
