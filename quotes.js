@@ -1,6 +1,12 @@
 var quotes = [
  
     'What bin do you need to put out this week?',
+    'Who is the best super villain of all time?',
+    'What\’s your favorite thing you own, and why?',
+    'What\’s your survival plan during a zombie apocalypse?',
+    'If you had to create an alter ego for yourself, who would it be and what would you name them?',
+    'If a song played every time you entered a room, what would it be?',
+    'Who\'s your favourite Alan?',
     'If you had the planet to yourself, where would you live?',
     'Which is best, Christmas in Summer, or Christmas in Winter?',
     'Which celebrity will play you in the film about your life?',
