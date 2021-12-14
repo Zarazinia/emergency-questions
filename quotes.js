@@ -1,5 +1,6 @@
 var quotes = [
  
+    'What\'s the most recent joke you\'ve heard?',
     'What bin do you need to put out this week?',
     'Who is the best super villain of all time?',
     'What\’s your favorite thing you own, and why?',
