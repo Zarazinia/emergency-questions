@@ -1,5 +1,9 @@
 var quotes = [
  
+    'Which is your favourite relative or sibling?',
+    'Would you rather co-own a car with Jimmy Carr, a lorry with Hugh Laurie, or a van with Van Morrison?',
+    'Would you rather be a mime or one of those people who pretends to be a statue?',
+    'What have you done today to make you feel proud?',
     'What\'s your favourite collective noun?',
     'What\'s the most recent joke you\'ve heard?',
     'What bin do you need to put out this week?',
