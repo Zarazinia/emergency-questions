@@ -79,6 +79,7 @@ var quotes = [
     'Would you consider having sex with an alien?',
     'What\s the last dream you can remember?',
     'What are you scared of?',
+    'Which fictional character would be the most annoying in real life?',
     'What will you win a Nobel Prize for?',
     'Would you prefer a cruise with Tom Cruise or a walking holiday with Christopher Walken?',
     'What sport would be the funniest to add a mandatory amount of alcohol to?',
