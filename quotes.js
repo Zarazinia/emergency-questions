@@ -79,6 +79,7 @@ var quotes = [
     'Would you consider having sex with an alien?',
     'What\s the last dream you can remember?',
     'What are you scared of?',
+    'What\s the difference between compulsory, mandatory, and obligatory',
     'Which fictional character would be the most annoying in real life?',
     'Which two public figures would you like to see fight each other, and which one would win?',
     'What will you win a Nobel Prize for?',
