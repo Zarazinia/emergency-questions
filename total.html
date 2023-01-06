@@ -1,53 +1,46 @@
-<!DOCTYPE html>
-
 <html>
-
-<meta charset=”utf-8″>
-
-<title>Output element sample</title>
-
-<body>
-
-    <article>
-
-        <header>
-
-            <h1>Output element sample</h1>
-
-            <p>Demo showing output element in HTML5</p>
-
-        </header>
-
-        <form onsubmit=”return false” oninput=”    totalamount.value = Math.round(principal.value * (Math.pow((1 + interest.value / 100), period.value)) * 100) / 100;“>
-
-            Principal<input name=”principal” id=”principal” type=”number”>
-
-            <br />
-
-            Duration<input name=”period” id=”period” type=”number”>
-
-            <br />
-
-            Interest Rate<input name=”interest” id=”interest” type=”number”>
-
-            <br />
-
-            Total amount <output name=”totalamount“ id=”totalamount“ for=”principal period interest”></output>
-
-        </form>
-
-        <footer>
-
-            <h1></h1>
-
-            <p>HTML Goodies</p>
-
-        </footer>
-
-    </article>
-
-</body>
-
- 
-
+<body>    
+<form onsubmit="return false" oninput="tta.value = parseInt(r1ta.value)+parseInt(r2ta.value)+parseInt(r3ta.value)+parseInt(r4ta.value);ttb.value = parseInt(r1tb.value)+parseInt(r2tb.value)+parseInt(r3tb.value)+parseInt(r4tb.value);te.value = parseInt(r1e.value)+parseInt(r2e.value)+parseInt(r3e.value)+parseInt(r4e.value)">
+<table style="height: 97px;" width="216">
+<tbody>
+<tr>
+<td>RINK</td>
+<td>TEAM A</td>
+<td>TEAM B</td>
+<td>ENDS</td>
+</tr>
+<tr>
+<td>1</td>
+<td><input id="r1ta" name="r1ta" type="number" /></td>
+<td><input id="r1tb" name="r1tb" type="number" /></td>
+<td><input id="r1e" name="r1e" type="number" /></td>
+</tr>
+<tr>
+<td>2</td>
+<td><input id="r2ta" name="r2ta" type="number" /></td>
+<td><input id="r2tb" name="r2tb" type="number" /></td>
+<td><input id="r2e" name="r2e" type="number" /></td>
+</tr>
+<tr>
+<td>3</td>
+<td><input id="r3ta" name="r3ta" type="number" /></td>
+<td><input id="r3tb" name="r3tb" type="number" /></td>
+<td><input id="r3e" name="r3e" type="number" /></td>
+</tr>
+<tr>
+<td>4</td>
+<td><input id="r4ta" name="r4ta" type="number" /></td>
+<td><input id="r4tb" name="r4tb" type="number" /></td>
+<td><input id="r4e" name="r4e" type="number" /></td>
+</tr>
+<tr>
+<td>TOTAL</td>
+<td><output for="r1ta r2ta r3ta r4ta" name="tta"></output></td>
+<td><output for="r1tb r2tb r3tb r4tb" name="ttb"></output></td>
+<td><output for="r1e r2e r3e r4e" name="te"></output></td>
+</tr>
+</tbody>
+</table>
+</form>
+    </body>
 </html>
