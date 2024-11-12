@@ -7,7 +7,7 @@
 .content {
   max-width: 500px;
   margin: 200px auto;
-background-color: #aaaaaa; 
+background-color: #ffffff; 
 }
 
 	.content p{
@@ -16,10 +16,16 @@ font-size: 16px;
 		margin: 20px;
 }
 
+.header 
+	{background-color: #aaaaaa;
+  margin: auto;
+  height: 100px;
+  color: #fff;
+}
 h1 {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 26px;	
-  padding: 100px 0px 30px 0px;
+  padding: 50px 0px 30px 0px;
 	margin: 20px;
 }
 	
@@ -59,13 +65,14 @@ h1 {
 </head>
 <body onload="newQuote()">
 
+<div class="header">
+ <h1>Emergency questions</h1>
 
-
-
-
+</div>
+	
 <div class="content">
 
- <h1>Emergency questions</h1>
+
 <p><i id = "quotes"></i> 
 	<button class="button button1" onclick="newQuote()">Next question</button> </p>
 	  
