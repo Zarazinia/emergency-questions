@@ -97,7 +97,8 @@ var quotes = [
  'Apart from Die Hard, what is the greatest Christmas film of all time?',
  'What is the most Christmassy flavour?',
  'Is Christmas even a religious festival anymore?',
- 'Why do we get annoyed?'
+ 'Why do we get annoyed?',
+ 'What\'s the best free thing that you get?'
 
 ]
 
