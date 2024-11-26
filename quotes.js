@@ -96,7 +96,11 @@ var quotes = [
     'If you were arrested with no explanation, what would your friends and family assume you had done?',
  'Apart from Die Hard, what is the greatest Christmas film of all time?',
  'What is the most Christmassy flavour?',
- 'Why do all the other planets and moons in our solar system have Latin of Greek names except the Earth, Moon and Sun?'
+ 'Why do all the other planets and moons in our solar system have Latin or Greek names except the Earth, Moon and Sun?',
+ 'Is Christmas even a religious festival anymore?',
+ 'Why do we get annoyed?',
+ 'What\'s the best free thing that you get?',
+ 'What\'s the best thing you've ever found?'
 
 ]
 
