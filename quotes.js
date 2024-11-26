@@ -93,7 +93,10 @@ var quotes = [
     'What would be the hat to end all hats? What could you wear on your head that would make people stop what they are doing and stare in awe and amazement?',
     'What would be the coolest animal to scale up to the size of a horse?',
     'If you were wrongfully put into an insane asylum, how would you convince them that you’re actually sane and not just pretending to be sane?',
-    'If you were arrested with no explanation, what would your friends and family assume you had done?'
+    'If you were arrested with no explanation, what would your friends and family assume you had done?',
+ 'Apart from Die Hard, what is the greatest Christmas film of all time?',
+ 'What is the most Christmassy flavour?',
+ 'Why do all the other planets and moons in our solar system have Latin of Greek names except the Earth, Moon and Sun?'
 
 ]
 
