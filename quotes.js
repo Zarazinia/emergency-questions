@@ -94,7 +94,8 @@ var quotes = [
     'What would be the coolest animal to scale up to the size of a horse?',
     'If you were wrongfully put into an insane asylum, how would you convince them that you’re actually sane and not just pretending to be sane?',
     'If you were arrested with no explanation, what would your friends and family assume you had done?',
- 'Apart from Die Hard, what is the greatest Christmas film of all time?'
+ 'Apart from Die Hard, what is the greatest Christmas film of all time?',
+ 'What is the most Christmassy flavour?'
 
 ]
 
