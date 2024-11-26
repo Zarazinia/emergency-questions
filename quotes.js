@@ -98,7 +98,8 @@ var quotes = [
  'What is the most Christmassy flavour?',
  'Is Christmas even a religious festival anymore?',
  'Why do we get annoyed?',
- 'If you could do any job, what would it be?'
+ 'If you could do any job, what would it be?',
+ 'If you could bring one plant or creature back from extinction, what would you choose?'
 ]
 
 function newQuote(){
