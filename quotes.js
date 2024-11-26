@@ -100,7 +100,8 @@ var quotes = [
  'Why do we get annoyed?',
  'If you could do any job, what would it be?',
  'If you could bring one plant or creature back from extinction, what would you choose?',
- 'What are your favourite and least favourite words?'
+ 'What are your favourite and least favourite words?',
+ 'What\'s your go-to karaoke song?'
 ]
 
 function newQuote(){
