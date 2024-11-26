@@ -77,10 +77,10 @@ var quotes = [
     'What would be the worst Buy One Get One Free sale of all time?',
     'If you were an action figure, what accessories would you be sold with?',
     'Would you consider having sex with an alien?',
-    'What\s the last dream you can remember?',
+    'What\'s the last dream you can remember?',
     'What are you scared of?',
     'If you could merge two different animals to create a third animal, what would you choose, and what would it\s major characteristics be?',
-    'What\s the difference between compulsory, mandatory, and obligatory?',
+    'What\'s the difference between compulsory, mandatory, and obligatory?',
     'Why is drowsiness listed as a side effect for sleeping pills?',
     'Is honesty the best policy?',
     'What do you call a female Daddy Long Legs?',
@@ -99,8 +99,8 @@ var quotes = [
  'Why do all the other planets and moons in our solar system have Latin or Greek names except the Earth, Moon and Sun?',
  'Is Christmas even a religious festival anymore?',
  'Why do we get annoyed?',
- 'What\s the best free thing that you get?',
- 'What\s the best thing you've ever found?'
+ 'What\'s the best free thing that you get?',
+ 'What\'s the best thing you've ever found?'
 
 ]
 
