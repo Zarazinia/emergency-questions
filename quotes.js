@@ -99,8 +99,8 @@ var quotes = [
  'Why do all the other planets and moons in our solar system have Latin or Greek names except the Earth, Moon and Sun?',
  'Is Christmas even a religious festival anymore?',
  'Why do we get annoyed?',
- 'What\'s the best free thing that you get?',
- 'What\'s the best thing you've ever found?'
+ 'What\s the best free thing that you get?',
+ 'What\s the best thing you've ever found?'
 
 ]
 
