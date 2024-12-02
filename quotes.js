@@ -109,7 +109,8 @@ var quotes = [
  'If magic was real, what spell would you try to learn first?',
  'What\’s the most ridiculous thing you have bought?',
  'What\’s the most historic thing that has happened in your lifetime?',
- 'If you built a themed hotel, what would the theme be and what would the rooms look like?'
+ 'If you built a themed hotel, what would the theme be and what would the rooms look like?',
+ 'If you had to disappear and start a whole new life, what would you want your new life to look like?'
 ]
 
 function newQuote(){
