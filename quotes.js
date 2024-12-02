@@ -103,7 +103,8 @@ var quotes = [
  'What are your favourite and least favourite words?',
  'What\'s your go-to karaoke song?',
  'Would you rather know what happened before the universe existed or what happens after it ends?',
- 'Have you got a favourite Venn diagram?'
+ 'Have you got a favourite Venn diagram?',
+ 'Who\'s your least favourite celebrity or politician?'
 ]
 
 function newQuote(){
