@@ -107,7 +107,8 @@ var quotes = [
  'Who\'s your least favourite celebrity or politician?',
  'What obstacles would be included in the World\’s most amazing obstacle course?',
  'If magic was real, what spell would you try to learn first?',
- 'What’s the most ridiculous thing you have bought?'
+ 'What\’s the most ridiculous thing you have bought?',
+ 'What\’s the most historic thing that has happened in your lifetime?'
 ]
 
 function newQuote(){
