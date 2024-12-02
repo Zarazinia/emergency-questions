@@ -106,7 +106,8 @@ var quotes = [
  'Have you got a favourite Venn diagram?',
  'Who\'s your least favourite celebrity or politician?',
  'What obstacles would be included in the World\’s most amazing obstacle course?',
- 'If magic was real, what spell would you try to learn first?'
+ 'If magic was real, what spell would you try to learn first?',
+ 'What’s the most ridiculous thing you have bought?'
 ]
 
 function newQuote(){
