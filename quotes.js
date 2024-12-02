@@ -110,7 +110,8 @@ var quotes = [
  'What\’s the most ridiculous thing you have bought?',
  'What\’s the most historic thing that has happened in your lifetime?',
  'If you built a themed hotel, what would the theme be and what would the rooms look like?',
- 'If you had to disappear and start a whole new life, what would you want your new life to look like?'
+ 'If you had to disappear and start a whole new life, what would you want your new life to look like?',
+ 'If you could see 3 stats about any person you looked at, what three stats would you want to know?'
 ]
 
 function newQuote(){
