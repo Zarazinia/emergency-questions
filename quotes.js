@@ -102,7 +102,8 @@ var quotes = [
  'If you could bring one plant or creature back from extinction, what would you choose?',
  'What are your favourite and least favourite words?',
  'What\'s your go-to karaoke song?',
- 'Would you rather know what happened before the universe existed or what happens after it ends?'
+ 'Would you rather know what happened before the universe existed or what happens after it ends?',
+ 'Have you got a favourite Venn diagram?'
 ]
 
 function newQuote(){
