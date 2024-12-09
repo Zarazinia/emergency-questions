@@ -114,7 +114,8 @@ var quotes = [
  'If you could see 3 stats about any person you looked at, what three stats would you want to know?',
  'What movie\'s plot changes entirely only by changing one letter in the title?',
  'If you had a giraffe that you needed to hide, where would you hide it?',
- 'What\'s the best thing you\'ve ever found?'
+ 'What\'s the best thing you\'ve ever found?',
+ 'What\'s the best free thing that you get?'
 ]
 
 function newQuote(){
