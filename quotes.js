@@ -118,7 +118,8 @@ var quotes = [
  'What\'s the best free thing that you get?',
  'Which non-potato crisp is the best?',
  'Who is the first person you remember fancying?',
- 'What song would you like to replace the National Anthem?'
+ 'What song would you like to replace the National Anthem?',
+ 'Which Quality Street chocolate would you abolish, and what would you replace it with?'
 ]
 
 function newQuote(){
