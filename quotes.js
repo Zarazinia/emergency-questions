@@ -118,8 +118,11 @@ var quotes = [
  'What\'s the best free thing that you get?',
  'Which non-potato crisp is the best?',
  'Who is the first person you remember fancying?',
- 'What song would you like to replace the National Anthem?',
- 'Which Quality Street chocolate would you abolish, and what would you replace it with?'
+ 'If you could swap a TV series that went on for too long for one that was cancelled too soon, which would you choose?',
+ 'Which Quality Street chocolate would you abolish, and what would you replace it with?',
+ 'Do you have a favourite blanket?',
+ 'What would peanut butter be named if it wasn't called peanut butter?',
+ 'What was the worst fashion decision you ever made?'
 ]
 
 function newQuote(){
