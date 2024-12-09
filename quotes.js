@@ -121,7 +121,7 @@ var quotes = [
  'If you could swap a TV series that went on for too long for one that was cancelled too soon, which would you choose?',
  'Which Quality Street chocolate would you abolish, and what would you replace it with?',
  'Do you have a favourite blanket?',
- 'What would peanut butter be named if it wasn't called peanut butter?',
+ 'What would peanut butter be named if it wasn\'t called peanut butter?',
  'What was the worst fashion decision you ever made?'
 ]
 
