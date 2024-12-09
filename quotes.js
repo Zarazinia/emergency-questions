@@ -115,7 +115,9 @@ var quotes = [
  'What movie\'s plot changes entirely only by changing one letter in the title?',
  'If you had a giraffe that you needed to hide, where would you hide it?',
  'What\'s the best thing you\'ve ever found?',
- 'What\'s the best free thing that you get?'
+ 'What\'s the best free thing that you get?',
+ 'Which non-potato crisp is the best?',
+ 'Who is the first person you remember fancying?'
 ]
 
 function newQuote(){
