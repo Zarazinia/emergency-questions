@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Questions Generator with Admin</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for aesthetic enhancements */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        /* Custom background gradient for the card */
+        .card-bg {
+            background: linear-gradient(135deg, #1f2937, #374151); /* Dark blue/gray gradient */
+        }
+        /* Style for the question text for readability */
+        #question-display {
+            min-height: 120px; /* Ensure space even with short questions */
+        }
+        /* Simple animation for view transitions */
+        .view {
+            transition: opacity 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Firebase Imports and Setup -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, addDoc, setDoc, onSnapshot, collection, query, arrayUnion, arrayRemove, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global variables provided by the environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let app, db, auth;
+        let userId = null;
+        let isAuthReady = false;
+        
+        // Use a standard structure for the public, shared question data
+        const QUESTION_COLLECTION_PATH = `/artifacts/${appId}/public/data/questions`;
+
+        // Store the raw data globally
+        window.questionData = {}; 
+
+        // --- DOM Elements ---
+        const generatorView = document.getElementById('generator-view');
+        const adminView = document.getElementById('admin-view');
+        const categorySelect = document.getElementById('category-select');
+        const questionText = document.getElementById('question-text');
+        const nextButton = document.getElementById('next-button');
+        const adminStatus = document.getElementById('admin-status');
+        const addQuestionForm = document.getElementById('add-question-form');
+        const newCategoryInput = document.getElementById('new-category');
+        const newQuestionInput = document.getElementById('new-question');
+        const adminQuestionList = document.getElementById('admin-question-list');
+        const goToAdminButton = document.getElementById('go-to-admin-button');
+        const goToGeneratorButton = document.getElementById('go-to-generator-button');
+
+
+        // State for the generator
+        let currentCategory = '';
+        let availableQuestions = [];
+
+        /**
+         * Initializes Firebase and authenticates the user.
+         */
+        async function initializeFirebase() {
+            if (!firebaseConfig) {
+                console.error("Firebase configuration is missing.");
+                adminStatus.textContent = "Error: Firebase config missing. Cannot enable persistence.";
+                return;
+            }
+
+            try {
+                // setLogLevel('debug');
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                
+                // Sign in using the custom token or anonymously
+                await setPersistence(auth, browserLocalPersistence);
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                
+                // Listener for auth state changes
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        isAuthReady = true;
+                        adminStatus.textContent = `User ID: ${userId}`;
+                        console.log("Firebase Auth Ready. User ID:", userId);
+                        listenForQuestionData();
+                    } else {
+                        console.log("No user signed in.");
+                        isAuthReady = true;
+                    }
+                });
+
+            } catch (error) {
+                console.error("Firebase initialization or sign-in failed:", error);
+                adminStatus.textContent = `Error during auth: ${error.message}`;
+            }
+        }
+
+        /**
+         * Sets up real-time listener for the public question data.
+         */
+        function listenForQuestionData() {
+            if (!db) return;
+
+            const q = collection(db, QUESTION_COLLECTION_PATH);
+
+            onSnapshot(q, (snapshot) => {
+                const newData = {};
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    // Each document ID is the category name, and it contains a 'questions' array
+                    newData[doc.id] = data.questions || [];
+                });
+                
+                window.questionData = newData;
+                console.log("Question data updated from Firestore.", newData);
+                
+                // Refresh UI components
+                populateCategories();
+                renderAdminList();
+                
+                if (currentCategory && questionData[currentCategory]) {
+                    // Update current category selection if applicable
+                    categorySelect.value = currentCategory;
+                    selectCategory(currentCategory, false); // Don't reset question if possible
+                } else {
+                    questionText.textContent = "Select a category and press the button to start!";
+                    nextButton.disabled = true;
+                }
+
+            }, (error) => {
+                console.error("Error listening to Firestore data:", error);
+                adminStatus.textContent = `Data fetch error: ${error.message}`;
+            });
+        }
+
+        // --- View Navigation ---
+
+        function navigateTo(viewId) {
+            if (viewId === 'generator') {
+                adminView.classList.add('hidden');
+                generatorView.classList.remove('hidden');
+            } else if (viewId === 'admin') {
+                generatorView.classList.add('hidden');
+                adminView.classList.remove('hidden');
+            }
+        }
+
+        // --- Question Generator Functions ---
+
+        function populateCategories() {
+            const categories = Object.keys(window.questionData)
+                .filter(cat => window.questionData[cat] && window.questionData[cat].length > 0) // Only show categories with questions
+                .sort();
+            
+            categorySelect.innerHTML = '';
+            
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = categories.length > 0 ? '--- Choose a Category ---' : '--- No Questions Available ---';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            categorySelect.appendChild(defaultOption);
+
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categorySelect.appendChild(option);
+            });
+        }
+
+        function selectCategory(categoryName, resetQuestion = true) {
+            currentCategory = categoryName;
+            availableQuestions = window.questionData[categoryName] || [];
+            
+            if (availableQuestions.length > 0) {
+                nextButton.disabled = false;
+                if (resetQuestion) {
+                    displayRandomQuestion();
+                }
+            } else {
+                questionText.textContent = "No questions found for this category. Please select another.";
+                nextButton.disabled = true;
+            }
+        }
+
+        function displayRandomQuestion() {
+            if (availableQuestions.length === 0) {
+                questionText.textContent = "Please select a category first!";
+                nextButton.disabled = true;
+                return;
+            }
+
+            const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+            const question = availableQuestions[randomIndex];
+
+            questionText.classList.remove('opacity-100');
+            questionText.classList.add('opacity-0');
+
+            setTimeout(() => {
+                questionText.textContent = question;
+                questionText.classList.remove('opacity-0');
+                questionText.classList.add('opacity-100');
+            }, 100);
+        }
+
+        // --- Admin Functions ---
+        
+        function renderAdminList() {
+            adminQuestionList.innerHTML = '';
+            const categories = Object.keys(window.questionData).sort();
+
+            if (categories.length === 0) {
+                adminQuestionList.innerHTML = '<p class="text-gray-400">No categories found. Use the form above to add your first question!</p>';
+                return;
+            }
+
+            categories.forEach(category => {
+                const questions = window.questionData[category];
+                
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'mb-4 p-4 border border-gray-700 rounded-lg bg-gray-700/50';
+                
+                // Category Header (with delete button for category)
+                const header = document.createElement('div');
+                header.className = 'flex justify-between items-center mb-2';
+                header.innerHTML = `<h3 class="text-lg font-bold text-blue-300">${category} (${questions.length})</h3>`;
+                
+                const deleteCategoryButton = document.createElement('button');
+                deleteCategoryButton.textContent = 'Clear Category';
+                deleteCategoryButton.className = 'text-xs text-red-400 hover:text-red-500 transition duration-150 p-1 rounded';
+                deleteCategoryButton.onclick = () => deleteCategory(category);
+                header.appendChild(deleteCategoryButton);
+
+                categoryDiv.appendChild(header);
+
+                // Question List
+                const ul = document.createElement('ul');
+                questions.forEach(question => {
+                    const li = document.createElement('li');
+                    li.className = 'flex justify-between items-start py-1 border-b border-gray-700 last:border-b-0';
+                    li.innerHTML = `<span class="text-gray-300 text-sm italic pr-4">${question}</span>`;
+                    
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Remove';
+                    deleteButton.className = 'flex-shrink-0 ml-4 px-2 py-0.5 text-xs bg-red-600 hover:bg-red-700 rounded transition duration-150';
+                    deleteButton.onclick = () => removeQuestion(category, question);
+                    
+                    li.appendChild(deleteButton);
+                    ul.appendChild(li);
+                });
+
+                categoryDiv.appendChild(ul);
+                adminQuestionList.appendChild(categoryDiv);
+            });
+        }
+
+        async function addNewQuestion(event) {
+            event.preventDefault();
+            
+            if (!isAuthReady) {
+                adminStatus.textContent = "Database is initializing. Please wait.";
+                return;
+            }
+
+            const category = newCategoryInput.value.trim();
+            const question = newQuestionInput.value.trim();
+
+            if (!category || !question) {
+                alert("Please enter both a category name and a question.");
+                return;
+            }
+
+            const categoryRef = doc(db, QUESTION_COLLECTION_PATH, category);
+            
+            try {
+                const existingData = window.questionData[category] || [];
+                
+                if (existingData.length === 0) {
+                    // Category does not exist, create the document
+                    await setDoc(categoryRef, {
+                        questions: [question],
+                        createdBy: userId,
+                        createdAt: new Date(),
+                    });
+                    adminStatus.textContent = `New category '${category}' created with one question.`;
+                } else {
+                    // Category exists, update the questions array
+                    await setDoc(categoryRef, {
+                        questions: arrayUnion(question)
+                    }, { merge: true });
+                    adminStatus.textContent = `Question added to existing category '${category}'.`;
+                }
+
+                newCategoryInput.value = '';
+                newQuestionInput.value = '';
+
+            } catch (error) {
+                console.error("Error adding question:", error);
+                adminStatus.textContent = `Failed to add question: ${error.message}`;
+            }
+        }
+        
+        async function removeQuestion(category, questionToRemove) {
+            if (!isAuthReady) {
+                adminStatus.textContent = "Database is initializing. Please wait.";
+                return;
+            }
+
+            const categoryRef = doc(db, QUESTION_COLLECTION_PATH, category);
+
+            try {
+                await setDoc(categoryRef, {
+                    questions: arrayRemove(questionToRemove)
+                }, { merge: true });
+                
+                adminStatus.textContent = `Question removed from category '${category}'.`;
+                
+            } catch (error) {
+                console.error("Error removing question:", error);
+                adminStatus.textContent = `Failed to remove question: ${error.message}`;
+            }
+        }
+        
+        async function deleteCategory(category) {
+            if (!isAuthReady) {
+                adminStatus.textContent = "Database is initializing. Please wait.";
+                return;
+            }
+
+            // Using a simple custom modal replacement instead of alert/confirm
+            const confirmation = window.confirm(`Are you sure you want to CLEAR all questions from the category: ${category}? The category structure will remain, but all questions will be removed.`);
+            if (!confirmation) {
+                return;
+            }
+
+            const categoryRef = doc(db, QUESTION_COLLECTION_PATH, category);
+
+            try {
+                 await setDoc(categoryRef, {
+                    questions: [],
+                }, { merge: true });
+
+                adminStatus.textContent = `Category '${category}' cleared.`;
+                
+            } catch (error) {
+                console.error("Error clearing category:", error);
+                adminStatus.textContent = `Failed to clear category: ${error.message}`;
+            }
+        }
+
+        // --- Initialization and Event Listeners ---
+
+        window.onload = function() {
+            initializeFirebase();
+            
+            // Initial view setup
+            navigateTo('generator');
+            nextButton.disabled = true;
+
+            // Generator Event Listeners
+            categorySelect.addEventListener('change', (event) => selectCategory(event.target.value));
+            nextButton.addEventListener('click', displayRandomQuestion);
+            
+            // Navigation Listeners
+            goToAdminButton.addEventListener('click', () => navigateTo('admin'));
+            goToGeneratorButton.addEventListener('click', () => navigateTo('generator'));
+            
+            // Admin Form Listener
+            addQuestionForm.addEventListener('submit', addNewQuestion);
+        };
+    </script>
+
+    <div id="app" class="w-full max-w-lg mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- === Generator View === -->
+        <div id="generator-view" class="view">
+            <div class="card-bg p-8 rounded-2xl shadow-2xl text-white transform hover:scale-[1.01] transition duration-300">
+                
+                <header class="mb-6 text-center">
+                    <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Emergency Questions</h1>
+                    <p class="text-gray-300 mt-2 text-sm sm:text-base">Break the ice. Spark a conversation.</p>
+                </header>
+                
+                <!-- Category Selector Dropdown -->
+                <div class="mb-6">
+                    <label for="category-select" class="block text-sm font-medium mb-2 text-gray-200">Select Category:</label>
+                    <select id="category-select" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-blue-500 focus:border-blue-500 cursor-pointer shadow-inner transition duration-150">
+                        <option value="">--- Loading Categories ---</option>
+                    </select>
+                </div>
+
+                <!-- Question Display Area -->
+                <div id="question-display" class="bg-gray-800 p-6 rounded-xl shadow-inner mb-8 flex items-center justify-center text-center">
+                    <p id="question-text" class="text-xl sm:text-2xl font-semibold text-yellow-300 transition duration-300 ease-in-out">
+                        Database initializing...
+                    </p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="space-y-3">
+                    <button id="next-button" 
+                            class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg 
+                                transform transition duration-150 hover:scale-[1.03] active:scale-95 
+                                focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50"
+                            disabled>
+                        Next Question
+                    </button>
+                    
+                    <button id="go-to-admin-button" 
+                            class="w-full py-2 text-sm bg-gray-600 hover:bg-gray-700 text-gray-200 font-semibold rounded-xl 
+                                transform transition duration-150 hover:scale-[1.01] active:scale-95">
+                        Go to Admin Panel
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- === Admin View === -->
+        <div id="admin-view" class="view hidden">
+            <div class="p-6 rounded-2xl shadow-xl bg-gray-800 text-white">
+                <div class="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
+                    <h2 class="text-2xl font-bold text-red-400">Question Management</h2>
+                    <button id="go-to-generator-button" 
+                            class="px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 text-gray-200 font-semibold rounded-xl transition duration-150">
+                        &larr; Back to Generator
+                    </button>
+                </div>
+                
+                <p id="admin-status" class="text-sm text-gray-400 text-center mb-4">Initializing...</p>
+                
+                <h3 class="text-xl font-semibold mb-3 border-b border-gray-700 pb-1 text-yellow-300">Add New Question</h3>
+                <form id="add-question-form" class="space-y-4 mb-8">
+                    <div>
+                        <label for="new-category" class="block text-sm font-medium text-gray-300">Category Name (Case Sensitive)</label>
+                        <input type="text" id="new-category" required placeholder="New or existing category name"
+                               class="w-full p-2 mt-1 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="new-question" class="block text-sm font-medium text-gray-300">New Question Text</label>
+                        <textarea id="new-question" required placeholder="What is the meaning of life?" rows="2"
+                                  class="w-full p-2 mt-1 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    </div>
+                    <button type="submit"
+                            class="w-full py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition duration-150">
+                        Add Question to Database
+                    </button>
+                </form>
+
+                <h3 class="text-xl font-semibold mb-3 border-b border-gray-700 pb-1 text-yellow-300">Current Questions</h3>
+                <div id="admin-question-list" class="space-y-3 max-h-96 overflow-y-auto pr-2">
+                    <p class="text-gray-400">Loading categories...</p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>
