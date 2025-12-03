@@ -88,9 +88,10 @@
     <!-- ============================================= -->
     <script>
         // --- Global Config and State Variables ---
-        const HARDCODED_PASSWORD = 'secret'; // This is the simple client-side password
+        const HARDCODED_PASSWORD = 'secret'; 
         const SESSION_KEY = 'adminAccessGranted';
         const STORAGE_KEY = 'emergencyQuestionsData';
+        const ALL_CATEGORIES_KEY = 'ALL_QUESTIONS_MODE'; // New key for the aggregated category
 
         // --- Global DOM and State Variables ---
         let categorySelect, questionText, nextButton, loadingStatus;
@@ -135,7 +136,6 @@
         // --- Password and Session Logic ---
 
         function checkAdminSession() {
-            // Check if the session flag is set
             return sessionStorage.getItem(SESSION_KEY) === 'true';
         }
 
@@ -143,7 +143,7 @@
             sessionStorage.setItem(SESSION_KEY, 'true');
             passwordForm.classList.add('hidden');
             protectedAdminContent.classList.remove('hidden');
-            populateAdminCategorySelect(); // Initialize admin form after access is granted
+            populateAdminCategorySelect();
         }
         
         function handlePasswordSubmission(event) {
@@ -155,7 +155,7 @@
                 statusMessage.textContent = "Admin access granted!";
             } else {
                 statusMessage.textContent = "Incorrect password. Access denied.";
-                passwordInput.value = ''; // Clear input on failure
+                passwordInput.value = '';
             }
             setTimeout(() => { statusMessage.textContent = ""; }, 3000);
         }
@@ -169,7 +169,6 @@
                 generatorView.classList.remove('hidden');
                 adminView.classList.add('hidden');
                 toggleButton.textContent = 'Open Admin Panel';
-                // Reset generator view
                 populateCategories(true); 
                 questionText.textContent = "Select a category to start generating questions!";
                 nextButton.disabled = true;
@@ -180,14 +179,12 @@
                 adminView.classList.remove('hidden');
                 toggleButton.textContent = 'Back to Generator';
                 
-                // Check if access is granted for the session
                 if (checkAdminSession()) {
-                    grantAdminAccess(); // Re-show content, ensuring category list is fresh
+                    grantAdminAccess(); 
                 } else {
-                    // Show password prompt
                     passwordForm.classList.remove('hidden');
                     protectedAdminContent.classList.add('hidden');
-                    passwordInput.value = ''; // Clear input
+                    passwordInput.value = '';
                     passwordInput.focus();
                 }
             }
@@ -204,6 +201,7 @@
             
             targetSelect.innerHTML = '';
             
+            // Default/Placeholder Option
             const defaultOption = document.createElement('option');
             defaultOption.value = '';
             defaultOption.textContent = categories.length > 0 ? '--- Choose a Category ---' : '--- No Questions Available ---';
@@ -211,6 +209,16 @@
             defaultOption.selected = true;
             targetSelect.appendChild(defaultOption);
 
+            // Add the special "All Questions" option only to the Generator view
+            if (isGeneratorView && categories.length > 0) {
+                const allOption = document.createElement('option');
+                allOption.value = ALL_CATEGORIES_KEY;
+                allOption.textContent = '⚡ All Questions (Random)';
+                allOption.classList.add('font-bold', 'text-yellow-400', 'bg-gray-800');
+                targetSelect.appendChild(allOption);
+            }
+
+            // Add standard categories
             categories.forEach(category => {
                 const option = document.createElement('option');
                 option.value = category;
@@ -225,7 +233,15 @@
 
         function selectCategory(categoryName, resetQuestion = true) {
             currentCategory = categoryName;
-            availableQuestions = window.questionData[categoryName] || [];
+            
+            if (categoryName === ALL_CATEGORIES_KEY) {
+                // AGGREGATION LOGIC: Combine all questions from all categories
+                availableQuestions = Object.values(window.questionData).flat();
+                console.log(`Loaded ${availableQuestions.length} questions from all categories.`);
+            } else {
+                // Standard category selection
+                availableQuestions = window.questionData[categoryName] || [];
+            }
             
             if (availableQuestions.length > 0) {
                 nextButton.disabled = false;
@@ -262,6 +278,7 @@
         
         function populateAdminCategorySelect() {
             // Populate the dropdown with existing categories for the admin form
+            // NOTE: We pass false so it doesn't include the 'ALL_CATEGORIES_KEY' option.
             populateCategories(false); 
             
             // Add the 'New Category' option
@@ -290,7 +307,6 @@
             const newQuestion = adminQuestionInput.value.trim();
             const newCategoryName = adminNewCategoryInput.value.trim();
             
-            // 1. Determine the target category key
             if (adminCategorySelect.value === 'NEW_CATEGORY_PLACEHOLDER') {
                 if (!newCategoryName) {
                     statusMessage.textContent = "Error: Please enter a name for the new category.";
@@ -309,7 +325,6 @@
                 return;
             }
 
-            // 2. Update the data model
             if (!window.questionData[categoryKey]) {
                 window.questionData[categoryKey] = [];
             }
@@ -323,10 +338,9 @@
 
             window.questionData[categoryKey].push(newQuestion);
 
-            // 3. Save, Reset, and Inform
             saveDataToStorage();
             adminForm.reset();
-            populateAdminCategorySelect(); // Refresh the category list
+            populateAdminCategorySelect();
 
             statusMessage.textContent = `Success! Added question to category: ${categoryKey}.`;
             setTimeout(() => { statusMessage.textContent = ""; }, 3000);
