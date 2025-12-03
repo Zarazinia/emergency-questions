@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Questions Generator</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for aesthetic enhancements */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        /* Custom background gradient for the card */
+        .card-bg {
+            background: linear-gradient(135deg, #1f2937, #374151); /* Dark blue/gray gradient */
+        }
+        /* Style for the question text for readability */
+        #question-display {
+            min-height: 120px; /* Ensure space even with short questions */
+        }
+        /* Style for input elements in the dark theme */
+        .admin-input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            background-color: #374151; /* Gray-700 */
+            border: 1px solid #4b5563; /* Gray-600 */
+            color: #ffffff;
+            transition: border-color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+        }
+        .admin-input:focus {
+            outline: none;
+            border-color: #3b82f6; /* Blue-500 */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+        }
+        /* Specific style for select dropdown */
+        .admin-select {
+            appearance: none; /* Remove default arrow */
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white'%3e%3cpath d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem; /* Make space for the custom arrow */
+        }
+        /* Hidden input type fix */
+        input[type="text"].hidden, input[type="password"].hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================= -->
+    <!-- 1. STATIC QUESTION DATA SOURCE (Seed) -->
+    <!-- ============================================= -->
+    <script>
+        // This is the default data used if localStorage is empty.
+        const DEFAULT_QUESTION_DATA = {
+            'Deep Thoughts': [
+                "If you could have dinner with one historical figure, who would it be and why?",
+                "What is the most beautiful thing you have ever seen in person?",
+                "If your life had a theme song, what would it be and why?",
+            ],
+            'Hypothetical Scenarios': [
+                "You have the power to eradicate one common annoyance forever. Which one do you choose?",
+                "You must exchange your body with one fictional character for a week. Who is it?",
+            ],
+            'Trivial & Fun': [
+                "What's the strangest food combination you secretly enjoy?",
+                "What is your go-to karaoke song (even if you've never sung it publicly)?",
+            ]
+        };
+        
+        // This will hold the live data, loaded from localStorage
+        window.questionData = {}; 
+    </script>
+
+
+    <!-- ============================================= -->
+    <!-- 2. APPLICATION LOGIC AND LOCALSTORAGE -->
+    <!-- ============================================= -->
+    <script>
+        // --- Global Config and State Variables ---
+        const HARDCODED_PASSWORD = 'secret'; // This is the simple client-side password
+        const SESSION_KEY = 'adminAccessGranted';
+        const STORAGE_KEY = 'emergencyQuestionsData';
+
+        // --- Global DOM and State Variables ---
+        let categorySelect, questionText, nextButton, loadingStatus;
+        let adminCategorySelect, adminNewCategoryInput, adminQuestionInput, adminForm;
+        let generatorView, adminView, toggleButton, statusMessage;
+        let passwordForm, passwordInput, protectedAdminContent;
+
+        let currentCategory = '';
+        let availableQuestions = [];
+
+
+        // --- Data Persistence Functions (localStorage) ---
+
+        function loadDataFromStorage() {
+            const storedData = localStorage.getItem(STORAGE_KEY);
+            if (storedData) {
+                try {
+                    window.questionData = JSON.parse(storedData);
+                    statusMessage.textContent = "Data loaded successfully from local storage.";
+                } catch (e) {
+                    console.error("Error parsing stored data. Resetting to default.", e);
+                    window.questionData = DEFAULT_QUESTION_DATA;
+                    saveDataToStorage(); // Save default data back
+                }
+            } else {
+                window.questionData = DEFAULT_QUESTION_DATA;
+                saveDataToStorage(); // Initialize storage with default data
+                statusMessage.textContent = "Initialized with default questions.";
+            }
+            // Ensure status message disappears
+            setTimeout(() => { statusMessage.textContent = ""; }, 3000);
+        }
+
+        function saveDataToStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(window.questionData));
+            } catch (e) {
+                console.error("Could not save data to local storage.", e);
+            }
+        }
+        
+        // --- Password and Session Logic ---
+
+        function checkAdminSession() {
+            // Check if the session flag is set
+            return sessionStorage.getItem(SESSION_KEY) === 'true';
+        }
+
+        function grantAdminAccess() {
+            sessionStorage.setItem(SESSION_KEY, 'true');
+            passwordForm.classList.add('hidden');
+            protectedAdminContent.classList.remove('hidden');
+            populateAdminCategorySelect(); // Initialize admin form after access is granted
+        }
+        
+        function handlePasswordSubmission(event) {
+            event.preventDefault();
+            const enteredPassword = passwordInput.value.trim();
+
+            if (enteredPassword === HARDCODED_PASSWORD) {
+                grantAdminAccess();
+                statusMessage.textContent = "Admin access granted!";
+            } else {
+                statusMessage.textContent = "Incorrect password. Access denied.";
+                passwordInput.value = ''; // Clear input on failure
+            }
+            setTimeout(() => { statusMessage.textContent = ""; }, 3000);
+        }
+
+
+        // --- View Toggling ---
+
+        function toggleView() {
+            if (generatorView.classList.contains('hidden')) {
+                // Switch to Generator View
+                generatorView.classList.remove('hidden');
+                adminView.classList.add('hidden');
+                toggleButton.textContent = 'Open Admin Panel';
+                // Reset generator view
+                populateCategories(true); 
+                questionText.textContent = "Select a category to start generating questions!";
+                nextButton.disabled = true;
+                
+            } else {
+                // Switch to Admin View
+                generatorView.classList.add('hidden');
+                adminView.classList.remove('hidden');
+                toggleButton.textContent = 'Back to Generator';
+                
+                // Check if access is granted for the session
+                if (checkAdminSession()) {
+                    grantAdminAccess(); // Re-show content, ensuring category list is fresh
+                } else {
+                    // Show password prompt
+                    passwordForm.classList.remove('hidden');
+                    protectedAdminContent.classList.add('hidden');
+                    passwordInput.value = ''; // Clear input
+                    passwordInput.focus();
+                }
+            }
+        }
+
+
+        // --- Generator Logic (Read-Only) ---
+
+        function populateCategories(isGeneratorView = false) {
+            const targetSelect = isGeneratorView ? categorySelect : adminCategorySelect;
+            if (!targetSelect) return; 
+
+            const categories = Object.keys(window.questionData).sort();
+            
+            targetSelect.innerHTML = '';
+            
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = categories.length > 0 ? '--- Choose a Category ---' : '--- No Questions Available ---';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            targetSelect.appendChild(defaultOption);
+
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                targetSelect.appendChild(option);
+            });
+            
+            if (isGeneratorView) {
+                loadingStatus.classList.add('hidden');
+            }
+        }
+
+        function selectCategory(categoryName, resetQuestion = true) {
+            currentCategory = categoryName;
+            availableQuestions = window.questionData[categoryName] || [];
+            
+            if (availableQuestions.length > 0) {
+                nextButton.disabled = false;
+                if (resetQuestion) {
+                    displayRandomQuestion();
+                }
+            } else {
+                questionText.textContent = "No questions found for this category. Please select another.";
+                nextButton.disabled = true;
+            }
+        }
+
+        function displayRandomQuestion() {
+            if (availableQuestions.length === 0) {
+                questionText.textContent = "Please select a category first!";
+                nextButton.disabled = true;
+                return;
+            }
+
+            const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+            const question = availableQuestions[randomIndex];
+
+            questionText.classList.remove('opacity-100');
+            questionText.classList.add('opacity-0');
+
+            setTimeout(() => {
+                questionText.textContent = question;
+                questionText.classList.remove('opacity-0');
+                questionText.classList.add('opacity-100');
+            }, 100);
+        }
+
+        // --- Admin Panel Content Logic ---
+        
+        function populateAdminCategorySelect() {
+            // Populate the dropdown with existing categories for the admin form
+            populateCategories(false); 
+            
+            // Add the 'New Category' option
+            const newOption = document.createElement('option');
+            newOption.value = 'NEW_CATEGORY_PLACEHOLDER';
+            newOption.textContent = '--- Create New Category ---';
+            adminCategorySelect.appendChild(newOption);
+            
+            handleAdminCategoryChange();
+        }
+
+        function handleAdminCategoryChange() {
+            if (adminCategorySelect.value === 'NEW_CATEGORY_PLACEHOLDER') {
+                adminNewCategoryInput.classList.remove('hidden');
+                adminNewCategoryInput.required = true;
+            } else {
+                adminNewCategoryInput.classList.add('hidden');
+                adminNewCategoryInput.required = false;
+            }
+        }
+
+        function handleAdminSubmission(event) {
+            event.preventDefault();
+            
+            let categoryKey;
+            const newQuestion = adminQuestionInput.value.trim();
+            const newCategoryName = adminNewCategoryInput.value.trim();
+            
+            // 1. Determine the target category key
+            if (adminCategorySelect.value === 'NEW_CATEGORY_PLACEHOLDER') {
+                if (!newCategoryName) {
+                    statusMessage.textContent = "Error: Please enter a name for the new category.";
+                    return;
+                }
+                categoryKey = newCategoryName.charAt(0).toUpperCase() + newCategoryName.slice(1);
+            } else if (adminCategorySelect.value) {
+                categoryKey = adminCategorySelect.value;
+            } else {
+                statusMessage.textContent = "Error: Please select or create a category.";
+                return;
+            }
+            
+            if (!newQuestion) {
+                statusMessage.textContent = "Error: Please enter a question.";
+                return;
+            }
+
+            // 2. Update the data model
+            if (!window.questionData[categoryKey]) {
+                window.questionData[categoryKey] = [];
+            }
+            
+            if (window.questionData[categoryKey].includes(newQuestion)) {
+                statusMessage.textContent = "This question already exists in this category!";
+                setTimeout(() => { statusMessage.textContent = ""; }, 3000);
+                adminForm.reset();
+                return;
+            }
+
+            window.questionData[categoryKey].push(newQuestion);
+
+            // 3. Save, Reset, and Inform
+            saveDataToStorage();
+            adminForm.reset();
+            populateAdminCategorySelect(); // Refresh the category list
+
+            statusMessage.textContent = `Success! Added question to category: ${categoryKey}.`;
+            setTimeout(() => { statusMessage.textContent = ""; }, 3000);
+        }
+
+
+        // --- Initialization ---
+
+        window.onload = function() {
+            // 1. Assign Global DOM elements
+            generatorView = document.getElementById('generator-view');
+            adminView = document.getElementById('admin-view');
+            toggleButton = document.getElementById('toggle-view-button');
+            statusMessage = document.getElementById('status-message');
+
+            categorySelect = document.getElementById('category-select');
+            questionText = document.getElementById('question-text');
+            nextButton = document.getElementById('next-button');
+            loadingStatus = document.getElementById('loading-status');
+            
+            // Admin DOM elements
+            passwordForm = document.getElementById('password-form');
+            passwordInput = document.getElementById('password-input');
+            protectedAdminContent = document.getElementById('protected-admin-content');
+            adminCategorySelect = document.getElementById('admin-category-select');
+            adminNewCategoryInput = document.getElementById('admin-new-category-input');
+            adminQuestionInput = document.getElementById('admin-question-input');
+            adminForm = document.getElementById('admin-form');
+            
+
+            // 2. Load data and initialize generator UI
+            loadDataFromStorage();
+            populateCategories(true); 
+            
+            // Initial view setup
+            nextButton.disabled = true;
+            questionText.textContent = "Select a category to start generating questions!";
+            loadingStatus.classList.add('hidden'); 
+
+            // 3. Attach Event Listeners
+            
+            // Generator Listeners
+            categorySelect.addEventListener('change', (event) => selectCategory(event.target.value));
+            nextButton.addEventListener('click', displayRandomQuestion);
+            
+            // Admin Listeners
+            adminCategorySelect.addEventListener('change', handleAdminCategoryChange);
+            adminForm.addEventListener('submit', handleAdminSubmission);
+            passwordForm.addEventListener('submit', handlePasswordSubmission);
+            
+            // Global Listener
+            toggleButton.addEventListener('click', toggleView);
+            
+            // NOTE FOR USER: Log password hint
+            console.log("Admin Password Hint: The password is 'secret'");
+        };
+    </script>
+
+    <div id="app" class="w-full max-w-lg mx-auto relative">
+        
+        <!-- === Status Message Bar (Global) === -->
+        <div id="status-message" class="text-center text-sm text-green-400 font-medium mb-4 h-5"></div>
+        
+        <!-- === View Container === -->
+        <div class="card-bg p-8 rounded-2xl shadow-2xl text-white">
+            
+            <!-- === Generator View (Visible by default) === -->
+            <div id="generator-view">
+                <header class="mb-6 text-center">
+                    <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Emergency Questions</h1>
+                    <p class="text-gray-300 mt-2 text-sm sm:text-base">Break the ice. Spark a conversation.</p>
+                </header>
+                
+                <p id="loading-status" class="text-center text-sm text-yellow-500 mb-4">Loading static data...</p>
+
+                <!-- Category Selector Dropdown -->
+                <div class="mb-6">
+                    <label for="category-select" class="block text-sm font-medium mb-2 text-gray-200">Select Category:</label>
+                    <select id="category-select" class="admin-input admin-select text-white focus:ring-blue-500 focus:border-blue-500 cursor-pointer shadow-inner transition duration-150">
+                        <option value="">--- Loading Categories ---</option>
+                    </select>
+                </div>
+
+                <!-- Question Display Area -->
+                <div id="question-display" class="bg-gray-800 p-6 rounded-xl shadow-inner mb-8 flex items-center justify-center text-center">
+                    <p id="question-text" class="text-xl sm:text-2xl font-semibold text-yellow-300 transition duration-300 ease-in-out">
+                        Ready to go!
+                    </p>
+                </div>
+
+                <!-- Action Button -->
+                <button id="next-button" 
+                        class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg 
+                            transform transition duration-150 hover:scale-[1.03] active:scale-95 
+                            focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50"
+                        disabled>
+                    Next Question
+                </button>
+            </div>
+
+
+            <!-- === Admin View (Hidden by default) === -->
+            <div id="admin-view" class="hidden">
+                <header class="mb-6 text-center">
+                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-yellow-300">Admin Panel</h2>
+                    <p class="text-gray-300 mt-2 text-sm sm:text-base">Access protected content.</p>
+                </header>
+
+                <!-- === Password Gate Form === -->
+                <form id="password-form" class="mb-6">
+                    <div class="mb-4">
+                        <label for="password-input" class="block text-sm font-medium mb-2 text-gray-200">Enter Admin Password:</label>
+                        <input type="password" id="password-input" class="admin-input" placeholder="Password" required>
+                    </div>
+
+                    <button type="submit"
+                            class="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg 
+                                transform transition duration-150 active:scale-95">
+                        Access Admin Tools
+                    </button>
+                </form>
+
+                <!-- === Protected Content (Hidden until authenticated) === -->
+                <div id="protected-admin-content" class="hidden">
+                    <form id="admin-form">
+                        <!-- Category Selector -->
+                        <div class="mb-4">
+                            <label for="admin-category-select" class="block text-sm font-medium mb-2 text-gray-200">Select Existing Category:</label>
+                            <select id="admin-category-select" class="admin-input admin-select" required>
+                                <option value="">--- Loading Categories ---</option>
+                            </select>
+                        </div>
+                        
+                        <!-- New Category Input (Hidden by default) -->
+                        <div class="mb-4">
+                            <label for="admin-new-category-input" class="block text-sm font-medium mb-2 text-gray-200">New Category Name:</label>
+                            <input type="text" id="admin-new-category-input" class="admin-input hidden" placeholder="e.g., Space Trivia">
+                        </div>
+
+                        <!-- Question Input -->
+                        <div class="mb-6">
+                            <label for="admin-question-input" class="block text-sm font-medium mb-2 text-gray-200">New Question Text:</label>
+                            <textarea id="admin-question-input" rows="3" class="admin-input resize-none" placeholder="What is the deepest ocean trench?" required></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit"
+                                class="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg 
+                                    transform transition duration-150 hover:scale-[1.03] active:scale-95 
+                                    focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-opacity-50">
+                            Save Question
+                        </button>
+                    </form>
+                </div> <!-- End Protected Content -->
+            </div>
+        </div>
+        
+        <!-- === View Toggle Button (Global) === -->
+        <button id="toggle-view-button" 
+                class="mt-4 w-full py-2 text-sm bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-xl 
+                    transform transition duration-150 active:scale-95">
+            Open Admin Panel
+        </button>
+        
+    </div>
+</body>
+</html>
