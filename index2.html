@@ -30,7 +30,7 @@
 
     <!-- ============================================= -->
     <!-- 1. STATIC QUESTION DATA SOURCE -->
-    <!-- This data is now the permanent source for the application. -->
+    <!-- This data is the permanent source for the application. -->
     <!-- ============================================= -->
     <script>
         // This is the static data source, making the app self-contained.
@@ -79,22 +79,18 @@
     <!-- 2. APPLICATION LOGIC (Static Data Loader) -->
     <!-- ============================================= -->
     <script>
-        // --- DOM Elements ---
-        const categorySelect = document.getElementById('category-select');
-        const questionText = document.getElementById('question-text');
-        const nextButton = document.getElementById('next-button');
-        const loadingStatus = document.getElementById('loading-status');
-
-
-        // State for the generator
+        // Declare variables outside of onload for scoping, but initialize/use inside.
+        let categorySelect;
+        let questionText;
+        let nextButton;
+        let loadingStatus;
+        
         let currentCategory = '';
         let availableQuestions = [];
 
+
         // --- Question Generator Functions ---
 
-        /**
-         * Populates the category dropdown with options from the static data.
-         */
         function populateCategories() {
             const data = window.questionData;
             const categories = Object.keys(data).sort();
@@ -115,13 +111,9 @@
                 categorySelect.appendChild(option);
             });
             
-            // Hide loading status once categories are ready
             loadingStatus.classList.add('hidden');
         }
 
-        /**
-         * Updates the current category and loads the corresponding questions.
-         */
         function selectCategory(categoryName, resetQuestion = true) {
             currentCategory = categoryName;
             availableQuestions = window.questionData[categoryName] || [];
@@ -137,9 +129,6 @@
             }
         }
 
-        /**
-         * Selects and displays a random question from the current category's list.
-         */
         function displayRandomQuestion() {
             if (availableQuestions.length === 0) {
                 questionText.textContent = "Please select a category first!";
@@ -150,7 +139,6 @@
             const randomIndex = Math.floor(Math.random() * availableQuestions.length);
             const question = availableQuestions[randomIndex];
 
-            // Simple transition effect for the text
             questionText.classList.remove('opacity-100');
             questionText.classList.add('opacity-0');
 
@@ -164,7 +152,13 @@
         // --- Initialization and Event Listeners ---
 
         window.onload = function() {
-            // Since we are using static data, we initialize the UI immediately.
+            // Safely assign DOM elements inside window.onload
+            categorySelect = document.getElementById('category-select');
+            questionText = document.getElementById('question-text');
+            nextButton = document.getElementById('next-button');
+            loadingStatus = document.getElementById('loading-status');
+
+            // Initialize the UI with static data
             populateCategories();
             
             // Initial button state
