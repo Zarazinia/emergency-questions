@@ -29,36 +29,56 @@
 <body>
 
     <!-- ============================================= -->
-    <!-- APPLICATION LOGIC AND FIREBASE SETUP -->
+    <!-- 1. STATIC QUESTION DATA SOURCE -->
+    <!-- This data is now the permanent source for the application. -->
     <!-- ============================================= -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, onSnapshot, collection, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <script>
+        // This is the static data source, making the app self-contained.
+        window.questionData = {
+            'Deep Thoughts': [
+                "If you could have dinner with one historical figure, who would it be and why?",
+                "What is the most beautiful thing you have ever seen in person?",
+                "If your life had a theme song, what would it be and why?",
+                "What is one thing you believe to be true that most people would disagree with?",
+                "If you had unlimited resources, what global problem would you try to solve first?",
+                "What is a skill you think everyone should learn?",
+                "What is one dream you've given up on, and what replaced it?"
+            ],
+            'Hypothetical Scenarios': [
+                "If you woke up tomorrow with a new, random skill, what would it be?",
+                "You have the power to eradicate one common annoyance forever. Which one do you choose?",
+                "If animals could talk, which one would be the rudest and what would it say?",
+                "If you could only eat one food for the rest of your life, what would it be?",
+                "A time machine appears, but it only works once. Where and when do you go?",
+                "You must exchange your body with one fictional character for a week. Who is it?",
+                "If you could teleport, would you use it for practical things or fun things?"
+            ],
+            'Trivial & Fun': [
+                "What's the strangest food combination you secretly enjoy?",
+                "What is your go-to karaoke song (even if you've never sung it publicly)?",
+                "If you had to wear one color for the rest of your life, what would it be?",
+                "What is the most useless superpower you can imagine?",
+                "What is the most memorable line from a movie or TV show?",
+                "What is your favorite sound in the world?",
+                "What's a piece of common knowledge you only recently learned?"
+            ],
+            'Dilemmas & Morals': [
+                "Would you rather always be 10 minutes late or always be 20 minutes early?",
+                "Would you rather live without music or live without movies?",
+                "Would you rather fight 100 duck-sized horses or 1 horse-sized duck?",
+                "You find a wallet with $10,000 and the owner's information. What do you do?",
+                "Would you prefer to be able to instantly learn any language, or play any instrument masterfully?",
+                "Would you rather have a perfect memory or be able to perfectly forget things?",
+                "A friend tells you a big secret, but you know it will hurt them if you keep it. What do you do?"
+            ]
+        };
+    </script>
 
-        // Global variables provided by the environment
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-        
-        let firebaseConfig = null;
-        // SAFELY check and parse the Firebase configuration string
-        if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-            try {
-                firebaseConfig = JSON.parse(__firebase_config);
-            } catch (e) {
-                console.error("Error parsing __firebase_config. Is it valid JSON?", e);
-            }
-        }
 
-        let app, db, auth;
-        let isAuthReady = false;
-        
-        // Path to the public, shared question data
-        const QUESTION_COLLECTION_PATH = `/artifacts/${appId}/public/data/questions`;
-
-        // This will hold the real-time data from Firestore
-        window.questionData = {}; 
-
+    <!-- ============================================= -->
+    <!-- 2. APPLICATION LOGIC (Static Data Loader) -->
+    <!-- ============================================= -->
+    <script>
         // --- DOM Elements ---
         const categorySelect = document.getElementById('category-select');
         const questionText = document.getElementById('question-text');
@@ -70,96 +90,14 @@
         let currentCategory = '';
         let availableQuestions = [];
 
-        /**
-         * Initializes Firebase and authenticates the user.
-         */
-        async function initializeFirebase() {
-            if (!firebaseConfig) {
-                console.error("Firebase configuration is missing.");
-                loadingStatus.textContent = "Error: Firebase configuration is missing. Cannot initialize database.";
-                return;
-            }
-
-            try {
-                // setLogLevel('debug');
-                app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-                
-                // Sign in using the custom token or anonymously
-                await setPersistence(auth, browserLocalPersistence);
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-                
-                // Listener for auth state changes
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        isAuthReady = true;
-                        console.log("Firebase Auth Ready.");
-                        // Start listening for real-time data
-                        listenForQuestionData();
-                    } else {
-                        console.log("No user signed in.");
-                        isAuthReady = true;
-                    }
-                });
-
-            } catch (error) {
-                console.error("Firebase initialization or sign-in failed:", error);
-                loadingStatus.textContent = `Error during initialization: ${error.message}`;
-            }
-        }
-
-        /**
-         * Sets up real-time listener for the public question data.
-         */
-        function listenForQuestionData() {
-            if (!db) return;
-
-            const q = collection(db, QUESTION_COLLECTION_PATH);
-
-            onSnapshot(q, (snapshot) => {
-                const newData = {};
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    // Each document ID is the category name, and it contains a 'questions' array
-                    // Filter out empty categories
-                    if (data.questions && data.questions.length > 0) {
-                        newData[doc.id] = data.questions;
-                    }
-                });
-                
-                window.questionData = newData;
-                console.log("Question data updated from Firestore.", newData);
-                
-                // Refresh UI components
-                populateCategories();
-                
-                if (currentCategory && questionData[currentCategory]) {
-                    categorySelect.value = currentCategory;
-                    selectCategory(currentCategory, false);
-                } else {
-                    loadingStatus.classList.add('hidden');
-                    questionText.textContent = "Select a category and press the button to start!";
-                    nextButton.disabled = true;
-                }
-
-            }, (error) => {
-                console.error("Error listening to Firestore data:", error);
-                loadingStatus.textContent = `Data fetch error: ${error.message}`;
-            });
-        }
-
         // --- Question Generator Functions ---
 
         /**
-         * Populates the category dropdown with options.
+         * Populates the category dropdown with options from the static data.
          */
         function populateCategories() {
-            const categories = Object.keys(window.questionData).sort();
+            const data = window.questionData;
+            const categories = Object.keys(data).sort();
             
             categorySelect.innerHTML = '';
             
@@ -176,6 +114,9 @@
                 option.textContent = category;
                 categorySelect.appendChild(option);
             });
+            
+            // Hide loading status once categories are ready
+            loadingStatus.classList.add('hidden');
         }
 
         /**
@@ -223,10 +164,12 @@
         // --- Initialization and Event Listeners ---
 
         window.onload = function() {
-            initializeFirebase();
+            // Since we are using static data, we initialize the UI immediately.
+            populateCategories();
             
-            // Initial view setup
+            // Initial button state
             nextButton.disabled = true;
+            questionText.textContent = "Select a category to start generating questions!";
 
             // Generator Event Listeners
             categorySelect.addEventListener('change', (event) => selectCategory(event.target.value));
@@ -246,7 +189,7 @@
                 </header>
                 
                 <!-- Loading Status -->
-                <p id="loading-status" class="text-center text-sm text-yellow-500 mb-4">Database initializing...</p>
+                <p id="loading-status" class="text-center text-sm text-yellow-500 mb-4">Loading static data...</p>
 
                 <!-- Category Selector Dropdown -->
                 <div class="mb-6">
@@ -259,7 +202,7 @@
                 <!-- Question Display Area -->
                 <div id="question-display" class="bg-gray-800 p-6 rounded-xl shadow-inner mb-8 flex items-center justify-center text-center">
                     <p id="question-text" class="text-xl sm:text-2xl font-semibold text-yellow-300 transition duration-300 ease-in-out">
-                        Waiting for data...
+                        Ready to go!
                     </p>
                 </div>
 
