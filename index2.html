@@ -32,11 +32,59 @@
 </head>
 <body>
 
-    <!-- Firebase Imports and Setup -->
+    <!-- ============================================= -->
+    <!-- 1. INITIAL QUESTION DATA (Separated File Content) -->
+    <!-- This data is used to seed the database on first run. -->
+    <!-- ============================================= -->
+    <script>
+        window.initialQuestionData = {
+            'Deep Thoughts': [
+                "If you could have dinner with one historical figure, who would it be and why?",
+                "What is the most beautiful thing you have ever seen in person?",
+                "If your life had a theme song, what would it be and why?",
+                "What is one thing you believe to be true that most people would disagree with?",
+                "If you had unlimited resources, what global problem would you try to solve first?",
+                "What is a skill you think everyone should learn?",
+                "What is one dream you've given up on, and what replaced it?"
+            ],
+            'Hypothetical Scenarios': [
+                "If you woke up tomorrow with a new, random skill, what would it be?",
+                "You have the power to eradicate one common annoyance forever. Which one do you choose?",
+                "If animals could talk, which one would be the rudest and what would it say?",
+                "If you could only eat one food for the rest of your life, what would it be?",
+                "A time machine appears, but it only works once. Where and when do you go?",
+                "You must exchange your body with one fictional character for a week. Who is it?",
+                "If you could teleport, would you use it for practical things or fun things?"
+            ],
+            'Trivial & Fun': [
+                "What's the strangest food combination you secretly enjoy?",
+                "What is your go-to karaoke song (even if you've never sung it publicly)?",
+                "If you had to wear one color for the rest of your life, what would it be?",
+                "What is the most useless superpower you can imagine?",
+                "What is the most memorable line from a movie or TV show?",
+                "What is your favorite sound in the world?",
+                "What's a piece of common knowledge you only recently learned?"
+            ],
+            'Dilemmas & Morals': [
+                "Would you rather always be 10 minutes late or always be 20 minutes early?",
+                "Would you rather live without music or live without movies?",
+                "Would you rather fight 100 duck-sized horses or 1 horse-sized duck?",
+                "You find a wallet with $10,000 and the owner's information. What do you do?",
+                "Would you prefer to be able to instantly learn any language, or play any instrument masterfully?",
+                "Would you rather have a perfect memory or be able to perfectly forget things?",
+                "A friend tells you a big secret, but you know it will hurt them if you keep it. What do you do?"
+            ]
+        };
+    </script>
+
+
+    <!-- ============================================= -->
+    <!-- 2. APPLICATION LOGIC AND FIREBASE SETUP -->
+    <!-- ============================================= -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, addDoc, setDoc, onSnapshot, collection, query, arrayUnion, arrayRemove, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection, getDocs, writeBatch, arrayUnion, arrayRemove, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Global variables provided by the environment
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
@@ -50,7 +98,7 @@
         // Use a standard structure for the public, shared question data
         const QUESTION_COLLECTION_PATH = `/artifacts/${appId}/public/data/questions`;
 
-        // Store the raw data globally
+        // This will hold the real-time data from Firestore
         window.questionData = {}; 
 
         // --- DOM Elements ---
@@ -71,6 +119,34 @@
         // State for the generator
         let currentCategory = '';
         let availableQuestions = [];
+
+        /**
+         * Populates Firestore with the initial data if the collection is empty.
+         */
+        async function seedDatabaseIfEmpty() {
+            const q = collection(db, QUESTION_COLLECTION_PATH);
+            const snapshot = await getDocs(q);
+            
+            if (snapshot.empty && window.initialQuestionData && Object.keys(window.initialQuestionData).length > 0) {
+                console.log("Database empty. Seeding with initial data.");
+                const batch = writeBatch(db);
+                const categories = Object.keys(window.initialQuestionData);
+
+                categories.forEach(category => {
+                    const categoryRef = doc(db, QUESTION_COLLECTION_PATH, category);
+                    batch.set(categoryRef, {
+                        questions: window.initialQuestionData[category],
+                        createdBy: "System Seed",
+                        createdAt: new Date(),
+                    });
+                });
+
+                await batch.commit();
+                adminStatus.textContent = "Database seeded with default questions.";
+            } else {
+                console.log("Database already contains data or no initial data found.");
+            }
+        }
 
         /**
          * Initializes Firebase and authenticates the user.
@@ -97,12 +173,17 @@
                 }
                 
                 // Listener for auth state changes
-                onAuthStateChanged(auth, (user) => {
+                onAuthStateChanged(auth, async (user) => {
                     if (user) {
                         userId = user.uid;
                         isAuthReady = true;
                         adminStatus.textContent = `User ID: ${userId}`;
                         console.log("Firebase Auth Ready. User ID:", userId);
+                        
+                        // Check and seed the database first
+                        await seedDatabaseIfEmpty(); 
+                        
+                        // Then start listening for real-time data
                         listenForQuestionData();
                     } else {
                         console.log("No user signed in.");
@@ -128,7 +209,6 @@
                 const newData = {};
                 snapshot.forEach((doc) => {
                     const data = doc.data();
-                    // Each document ID is the category name, and it contains a 'questions' array
                     newData[doc.id] = data.questions || [];
                 });
                 
@@ -142,7 +222,7 @@
                 if (currentCategory && questionData[currentCategory]) {
                     // Update current category selection if applicable
                     categorySelect.value = currentCategory;
-                    selectCategory(currentCategory, false); // Don't reset question if possible
+                    selectCategory(currentCategory, false);
                 } else {
                     questionText.textContent = "Select a category and press the button to start!";
                     nextButton.disabled = true;
@@ -170,7 +250,7 @@
 
         function populateCategories() {
             const categories = Object.keys(window.questionData)
-                .filter(cat => window.questionData[cat] && window.questionData[cat].length > 0) // Only show categories with questions
+                .filter(cat => window.questionData[cat] && window.questionData[cat].length > 0)
                 .sort();
             
             categorySelect.innerHTML = '';
@@ -242,7 +322,6 @@
                 const categoryDiv = document.createElement('div');
                 categoryDiv.className = 'mb-4 p-4 border border-gray-700 rounded-lg bg-gray-700/50';
                 
-                // Category Header (with delete button for category)
                 const header = document.createElement('div');
                 header.className = 'flex justify-between items-center mb-2';
                 header.innerHTML = `<h3 class="text-lg font-bold text-blue-300">${category} (${questions.length})</h3>`;
@@ -255,7 +334,6 @@
 
                 categoryDiv.appendChild(header);
 
-                // Question List
                 const ul = document.createElement('ul');
                 questions.forEach(question => {
                     const li = document.createElement('li');
@@ -288,8 +366,8 @@
             const question = newQuestionInput.value.trim();
 
             if (!category || !question) {
-                alert("Please enter both a category name and a question.");
-                return;
+                // Using alert() replacement for immediate user feedback
+                if (window.confirm("Please enter both a category name and a question.")) return; 
             }
 
             const categoryRef = doc(db, QUESTION_COLLECTION_PATH, category);
@@ -298,7 +376,6 @@
                 const existingData = window.questionData[category] || [];
                 
                 if (existingData.length === 0) {
-                    // Category does not exist, create the document
                     await setDoc(categoryRef, {
                         questions: [question],
                         createdBy: userId,
@@ -306,7 +383,6 @@
                     });
                     adminStatus.textContent = `New category '${category}' created with one question.`;
                 } else {
-                    // Category exists, update the questions array
                     await setDoc(categoryRef, {
                         questions: arrayUnion(question)
                     }, { merge: true });
@@ -349,7 +425,6 @@
                 return;
             }
 
-            // Using a simple custom modal replacement instead of alert/confirm
             const confirmation = window.confirm(`Are you sure you want to CLEAR all questions from the category: ${category}? The category structure will remain, but all questions will be removed.`);
             if (!confirmation) {
                 return;
