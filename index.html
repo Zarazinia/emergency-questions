@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Questions Generator</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for aesthetic enhancements */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        /* Custom background gradient for the card */
+        .card-bg {
+            background: linear-gradient(135deg, #1f2937, #374151); /* Dark blue/gray gradient */
+        }
+        /* Style for the question text for readability */
+        #question-display {
+            min-height: 120px; /* Ensure space even with short questions */
+        }
+        /* Style for input elements in the dark theme */
+        .generator-select {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            background-color: #374151; /* Gray-700 */
+            border: 1px solid #4b5563; /* Gray-600 */
+            color: #ffffff;
+            transition: border-color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+            appearance: none; /* Remove default arrow */
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white'%3e%3cpath d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem; /* Make space for the custom arrow */
+        }
+        .generator-select:focus {
+            outline: none;
+            border-color: #3b82f6; /* Blue-500 */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================= -->
+    <!-- 1. STATIC QUESTION DATA SOURCE (Seed) -->
+    <!-- ============================================= -->
+    <script>
+        // This is the default data used if localStorage is empty.
+        const DEFAULT_QUESTION_DATA = {
+            'Deep Thoughts': [
+                "If you could have dinner with one historical figure, who would it be and why?",
+                "What is the most beautiful thing you have ever seen in person?",
+                "If your life had a theme song, what would it be and why?",
+            ],
+            'Hypothetical Scenarios': [
+                "You have the power to eradicate one common annoyance forever. Which one do you choose?",
+                "You must exchange your body with one fictional character for a week. Who is it?",
+            ],
+            'Trivial & Fun': [
+                "What's the strangest food combination you secretly enjoy?",
+                "What is your go-to karaoke song (even if you've never sung it publicly)?",
+            ]
+        };
+        
+        // This will hold the live data, loaded from localStorage
+        window.questionData = {}; 
+    </script>
+
+
+    <!-- ============================================= -->
+    <!-- 2. APPLICATION LOGIC AND LOCALSTORAGE -->
+    <!-- ============================================= -->
+    <script>
+        // --- Global Config and State Variables ---
+        const STORAGE_KEY = 'emergencyQuestionsData';
+        const ALL_CATEGORIES_KEY = 'ALL_QUESTIONS_MODE'; 
+
+        // --- Global DOM and State Variables ---
+        let categorySelect, questionText, nextButton, loadingStatus;
+        let statusMessage;
+
+        let currentCategory = '';
+        let availableQuestions = [];
+
+
+        // --- Data Persistence Functions (localStorage) ---
+
+        function loadDataFromStorage() {
+            const storedData = localStorage.getItem(STORAGE_KEY);
+            if (storedData) {
+                try {
+                    window.questionData = JSON.parse(storedData);
+                    statusMessage.textContent = "Data loaded successfully from local storage.";
+                } catch (e) {
+                    console.error("Error parsing stored data. Resetting to default.", e);
+                    window.questionData = DEFAULT_QUESTION_DATA;
+                    saveDataToStorage(); // Save default data back
+                }
+            } else {
+                window.questionData = DEFAULT_QUESTION_DATA;
+                saveDataToStorage(); // Initialize storage with default data
+                statusMessage.textContent = "Initialized with default questions.";
+            }
+            // Ensure status message disappears
+            setTimeout(() => { statusMessage.textContent = ""; }, 3000);
+        }
+
+        function saveDataToStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(window.questionData));
+            } catch (e) {
+                console.error("Could not save data to local storage.", e);
+            }
+        }
+        
+        // --- Generator Logic ---
+
+        function populateCategories() {
+            const targetSelect = categorySelect;
+            if (!targetSelect) return; 
+
+            const categories = Object.keys(window.questionData).sort();
+            
+            targetSelect.innerHTML = '';
+            
+            // Default/Placeholder Option
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = categories.length > 0 ? '--- Choose a Category ---' : '--- No Questions Available ---';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            targetSelect.appendChild(defaultOption);
+
+            // Add the special "All Questions" option
+            if (categories.length > 0) {
+                const allOption = document.createElement('option');
+                allOption.value = ALL_CATEGORIES_KEY;
+                allOption.textContent = '⚡ All Questions (Random)';
+                allOption.classList.add('font-bold', 'text-yellow-400', 'bg-gray-800');
+                targetSelect.appendChild(allOption);
+            }
+
+            // Add standard categories
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                targetSelect.appendChild(option);
+            });
+            
+            loadingStatus.classList.add('hidden');
+        }
+
+        function selectCategory(categoryName, resetQuestion = true) {
+            currentCategory = categoryName;
+            
+            if (categoryName === ALL_CATEGORIES_KEY) {
+                // AGGREGATION LOGIC: Combine all questions from all categories
+                availableQuestions = Object.values(window.questionData).flat();
+            } else {
+                // Standard category selection
+                availableQuestions = window.questionData[categoryName] || [];
+            }
+            
+            if (availableQuestions.length > 0) {
+                nextButton.disabled = false;
+                if (resetQuestion) {
+                    displayRandomQuestion();
+                }
+            } else {
+                questionText.textContent = "No questions found for this category. Please select another.";
+                nextButton.disabled = true;
+            }
+        }
+
+        function displayRandomQuestion() {
+            if (availableQuestions.length === 0) {
+                questionText.textContent = "Please select a category first!";
+                nextButton.disabled = true;
+                return;
+            }
+
+            const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+            const question = availableQuestions[randomIndex];
+
+            questionText.classList.remove('opacity-100');
+            questionText.classList.add('opacity-0');
+
+            setTimeout(() => {
+                questionText.textContent = question;
+                questionText.classList.remove('opacity-0');
+                questionText.classList.add('opacity-100');
+            }, 100);
+        }
+
+        // --- Initialization ---
+
+        window.onload = function() {
+            // 1. Assign Global DOM elements
+            statusMessage = document.getElementById('status-message');
+            categorySelect = document.getElementById('category-select');
+            questionText = document.getElementById('question-text');
+            nextButton = document.getElementById('next-button');
+            loadingStatus = document.getElementById('loading-status');
+            
+            // 2. Load data and initialize generator UI
+            loadDataFromStorage();
+            populateCategories(); 
+            
+            // Initial view setup
+            nextButton.disabled = true;
+            questionText.textContent = "Select a category to start generating questions!";
+            loadingStatus.classList.add('hidden'); 
+
+            // 3. Attach Event Listeners
+            categorySelect.addEventListener('change', (event) => selectCategory(event.target.value));
+            nextButton.addEventListener('click', displayRandomQuestion);
+        };
+    </script>
+
+    <div id="app" class="w-full max-w-lg mx-auto relative">
+        
+        <!-- === Status Message Bar (Global) === -->
+        <div id="status-message" class="text-center text-sm text-green-400 font-medium mb-4 h-5"></div>
+        
+        <!-- === View Container === -->
+        <div class="card-bg p-8 rounded-2xl shadow-2xl text-white">
+            
+            <!-- === Generator View (The only view) === -->
+            <div id="generator-view">
+                <!-- LOGO AND TITLE HEADER -->
+                <header class="mb-6 relative">
+                    <div class="text-center">
+                        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Emergency Questions</h1>
+                        <p class="text-gray-300 mt-2 text-sm sm:text-base">Break the ice. Spark a conversation.</p>
+                    </div>
+                    <!-- Image positioned absolutely on the right of the header -->
+                    <img src="http://googleusercontent.com/generated_image_content/0" 
+                         alt="App Logo featuring a dog" 
+                         class="absolute top-0 right-0 w-12 h-12 rounded-full shadow-lg border-2 border-yellow-400 object-cover">
+                </header>
+                <!-- END LOGO AND TITLE HEADER -->
+                
+                <p id="loading-status" class="text-center text-sm text-yellow-500 mb-4">Loading static data...</p>
+
+                <!-- Category Selector Dropdown -->
+                <div class="mb-6">
+                    <label for="category-select" class="block text-sm font-medium mb-2 text-gray-200">Select Category:</label>
+                    <select id="category-select" class="generator-select text-white focus:ring-blue-500 focus:border-blue-500 cursor-pointer shadow-inner transition duration-150">
+                        <option value="">--- Loading Categories ---</option>
+                    </select>
+                </div>
+
+                <!-- Question Display Area -->
+                <div id="question-display" class="bg-gray-800 p-6 rounded-xl shadow-inner mb-8 flex items-center justify-center text-center">
+                    <p id="question-text" class="text-xl sm:text-2xl font-semibold text-yellow-300 transition duration-300 ease-in-out">
+                        Ready to go!
+                    </p>
+                </div>
+
+                <!-- Action Button -->
+                <button id="next-button" 
+                        class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg 
+                            transform transition duration-150 hover:scale-[1.03] active:scale-95 
+                            focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50"
+                        disabled>
+                    Next Question
+                </button>
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>
